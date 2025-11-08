@@ -43,9 +43,6 @@
             min-height: 100vh;
             padding: 20px;
             padding-top: max(20px, env(safe-area-inset-top));
-            padding-left: env(safe-area-inset-left);
-            padding-right: env(safe-area-inset-right);
-            padding-bottom: env(safe-area-inset-bottom);
             color: var(--text);
             transition: all 0.3s ease;
         }
@@ -59,7 +56,7 @@
             margin: 0 auto;
         }
 
-        .header-controls {
+        .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -68,32 +65,32 @@
             flex-wrap: wrap;
         }
 
-        .theme-selector, .controls {
+        .language-selector, .theme-controls {
             display: flex;
             gap: 8px;
         }
 
-        .theme-btn, .control-btn {
+        .lang-btn, .theme-btn, .control-btn {
             background: white;
             border: none;
-            width: 40px;
-            height: 40px;
+            padding: 8px 12px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 18px;
+            font-weight: 600;
             transition: all 0.3s;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
+        body.dark-mode .lang-btn,
         body.dark-mode .theme-btn,
         body.dark-mode .control-btn {
             background: #333333;
             color: white;
         }
 
-        .theme-btn:hover, .control-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
         }
 
         header {
@@ -110,34 +107,30 @@
 
         .nav-tabs {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-            gap: 10px;
-            margin-bottom: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
+            gap: 8px;
+            margin-bottom: 12px;
         }
 
         .nav-tab {
-            padding: 10px 12px;
+            padding: 8px 10px;
             background: white;
             border: none;
             color: var(--primary);
             font-weight: 600;
             cursor: pointer;
-            border-radius: 8px;
-            font-size: 0.85em;
+            border-radius: 6px;
+            font-size: 0.8em;
             transition: all 0.3s;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
 
         body.dark-mode .nav-tab {
             background: #333333;
-            color: #667eea;
         }
 
         .nav-tab.active {
             background: var(--primary);
             color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
         }
 
         .section {
@@ -146,35 +139,35 @@
 
         .section.active {
             display: block;
-            animation: fadeIn 0.3s ease-in;
+            animation: fadeIn 0.3s;
         }
 
         .card {
             background: var(--bg);
             border-radius: 12px;
-            padding: 20px;
+            padding: 18px;
             box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             color: var(--text);
         }
 
         .card h2 {
             color: var(--primary);
-            margin-bottom: 12px;
-            font-size: 1.3em;
+            margin-bottom: 10px;
+            font-size: 1.2em;
         }
 
         .card h3 {
             color: var(--text);
-            margin: 15px 0 10px 0;
-            font-size: 1em;
+            margin: 12px 0 10px 0;
+            font-size: 0.95em;
         }
 
         .activity-form {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-            margin-bottom: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 12px;
         }
 
         .form-group {
@@ -185,33 +178,24 @@
         .form-group label {
             color: var(--text);
             font-weight: 600;
-            margin-bottom: 6px;
-            font-size: 0.9em;
+            margin-bottom: 4px;
+            font-size: 0.85em;
         }
 
         .form-group input,
         .form-group select,
         .form-group textarea {
-            padding: 10px;
+            padding: 8px;
             border: 2px solid var(--border);
             border-radius: 6px;
             font-family: inherit;
             font-size: 0.9em;
             background: var(--card-bg);
             color: var(--text);
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
         }
 
         .form-group textarea {
-            min-height: 50px;
+            min-height: 45px;
             resize: vertical;
         }
 
@@ -223,7 +207,6 @@
             cursor: pointer;
             font-size: 0.9em;
             transition: all 0.3s;
-            min-height: 44px;
         }
 
         .btn-primary {
@@ -231,122 +214,123 @@
             color: white;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
         .btn-secondary {
             background: var(--card-bg);
             color: var(--text);
-            border: 2px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            background: var(--border);
+            border: 1px solid var(--border);
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-            gap: 12px;
-            margin-bottom: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 12px;
         }
 
         .stat-box {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
             text-align: center;
         }
 
         .stat-number {
-            font-size: 1.8em;
+            font-size: 1.6em;
             font-weight: bold;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .stat-label {
-            font-size: 0.75em;
+            font-size: 0.7em;
             opacity: 0.9;
         }
 
         .item-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 12px;
-            margin-top: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
         }
 
         .item-card {
             background: var(--card-bg);
             border-left: 4px solid var(--primary);
-            padding: 12px;
+            padding: 10px;
             border-radius: 6px;
-            transition: all 0.3s;
             color: var(--text);
-        }
-
-        .item-card:hover {
-            box-shadow: 0 3px 12px rgba(0,0,0,0.1);
         }
 
         .item-name {
             font-weight: 600;
-            color: var(--text);
-            margin-bottom: 6px;
-            font-size: 0.95em;
+            margin-bottom: 4px;
+            font-size: 0.9em;
         }
 
         .item-meta {
             color: var(--text-light);
-            font-size: 0.8em;
+            font-size: 0.75em;
         }
 
-        .success-message {
-            background: #e8f5e9;
-            border: 2px solid #51cf66;
-            color: #2d6a2d;
-            padding: 12px;
-            border-radius: 6px;
-            margin: 12px 0;
-        }
-
-        body.dark-mode .success-message {
-            background: #1b5e20;
-            color: #81c784;
-            border-color: #51cf66;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-
-        .share-buttons {
-            display: flex;
-            gap: 8px;
+        .leaderboard {
             margin-top: 10px;
-            flex-wrap: wrap;
         }
 
-        .share-btn {
-            padding: 8px 12px;
-            border: none;
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--card-bg);
+            padding: 10px;
             border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85em;
-            transition: all 0.3s;
+            margin-bottom: 8px;
+        }
+
+        .leaderboard-rank {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.2em;
+            width: 30px;
+        }
+
+        .leaderboard-name {
+            flex: 1;
+            margin-left: 10px;
             font-weight: 600;
         }
 
-        .share-twitter { background: #1DA1F2; color: white; }
-        .share-facebook { background: #1877F2; color: white; }
-        .share-linkedin { background: #0A66C2; color: white; }
-        .share-whatsapp { background: #25D366; color: white; }
+        .leaderboard-score {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .goal-card {
+            background: var(--card-bg);
+            border: 2px solid var(--primary);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .goal-progress {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .goal-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
 
         .modal {
             display: none;
@@ -369,9 +353,10 @@
             background: var(--bg);
             padding: 20px;
             border-radius: 12px;
-            max-width: 400px;
+            max-width: 450px;
             width: 90%;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            max-height: 80vh;
+            overflow-y: auto;
             color: var(--text);
         }
 
@@ -381,7 +366,6 @@
             font-size: 24px;
             cursor: pointer;
             float: right;
-            color: var(--text);
         }
 
         @keyframes fadeIn {
@@ -390,85 +374,76 @@
         }
 
         @media (max-width: 600px) {
-            .activity-form {
-                grid-template-columns: 1fr;
-            }
-            header h1 {
-                font-size: 1.5em;
-            }
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .activity-form { grid-template-columns: 1fr; }
+            header h1 { font-size: 1.5em; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .nav-tabs { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header-controls">
+        <!-- Header with Language & Theme -->
+        <div class="header-top">
             <header style="margin-bottom: 0; flex: 1;">
-                <h1>🌸 Ikigai Journey</h1>
+                <h1>🌸 <span id="appTitle">Ikigai Journey</span></h1>
             </header>
-            <div class="controls">
-                <div class="theme-selector">
-                    <button class="theme-btn" title="Light Theme" onclick="setTheme('light')">☀️</button>
-                    <button class="theme-btn" title="Dark Theme" onclick="setTheme('dark')">🌙</button>
-                </div>
-                <button class="control-btn" title="Export Data" onclick="exportData()">💾</button>
-                <button class="control-btn" title="Settings" onclick="openSettings()">⚙️</button>
+            <div class="language-selector">
+                <button class="lang-btn active" onclick="changeLanguage('en')">EN</button>
+                <button class="lang-btn" onclick="changeLanguage('es')">ES</button>
+                <button class="lang-btn" onclick="changeLanguage('hi')">HI</button>
+                <button class="lang-btn" onclick="changeLanguage('ta')">TA</button>
+                <button class="lang-btn" onclick="changeLanguage('ka')">KA</button>
+            </div>
+            <div class="theme-controls">
+                <button class="theme-btn" onclick="setTheme('light')">☀️</button>
+                <button class="theme-btn" onclick="setTheme('dark')">🌙</button>
+                <button class="control-btn" onclick="exportData()">💾</button>
+                <button class="control-btn" onclick="openSettings()">⚙️</button>
             </div>
         </div>
 
+        <!-- Navigation -->
         <div class="nav-tabs">
-            <button class="nav-tab active" onclick="switchTab('discover')">🎯 Discover</button>
-            <button class="nav-tab" onclick="switchTab('today')">📅 Activity</button>
-            <button class="nav-tab" onclick="switchTab('nutrition')">🍽️ Nutrition</button>
-            <button class="nav-tab" onclick="switchTab('wellness')">💪 Wellness</button>
-            <button class="nav-tab" onclick="switchTab('analytics')">📊 Stats</button>
+            <button class="nav-tab active" onclick="switchTab('discover')">🎯 <span id="navDiscover">Discover</span></button>
+            <button class="nav-tab" onclick="switchTab('today')">📅 <span id="navActivity">Activity</span></button>
+            <button class="nav-tab" onclick="switchTab('goals')">🎯 <span id="navGoals">Goals</span></button>
+            <button class="nav-tab" onclick="switchTab('leaderboard')">🏆 <span id="navLeader">Leader</span></button>
+            <button class="nav-tab" onclick="switchTab('wellness')">💪 <span id="navWellness">Wellness</span></button>
+            <button class="nav-tab" onclick="switchTab('analytics')">📊 <span id="navStats">Stats</span></button>
         </div>
 
         <!-- DISCOVER SECTION -->
         <div id="discover" class="section active">
             <div class="card">
-                <h2>🌸 Discover Your Ikigai</h2>
+                <h2 id="discoverTitle">🌸 Discover Your Ikigai</h2>
 
                 <form id="ikigaiForm" onsubmit="submitIkigai(event)">
                     <div class="activity-form">
                         <div class="form-group">
-                            <label for="love">❤️ What do you LOVE?</label>
-                            <textarea id="love" placeholder="Your passions..." required></textarea>
+                            <label id="labelLove">❤️ What do you LOVE?</label>
+                            <textarea id="love" required></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="good">⭐ What are you GOOD AT?</label>
-                            <textarea id="good" placeholder="Your talents..." required></textarea>
+                            <label id="labelGood">⭐ What are you GOOD AT?</label>
+                            <textarea id="good" required></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="need">🌍 What does WORLD NEED?</label>
-                            <textarea id="need" placeholder="Your contribution..." required></textarea>
+                            <label id="labelNeed">🌍 What WORLD NEEDS?</label>
+                            <textarea id="need" required></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="paid">💰 What can you be PAID FOR?</label>
-                            <textarea id="paid" placeholder="Monetizable skills..." required></textarea>
+                            <label id="labelPaid">💰 What PAID FOR?</label>
+                            <textarea id="paid" required></textarea>
                         </div>
                     </div>
-                    <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">✨ Generate Ikigai</button>
+                    <button type="submit" class="btn-primary" style="width: 100%; margin-top: 8px;" id="btnGenerate">✨ Generate</button>
                 </form>
 
-                <div id="ikigaiDiagram" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 2px solid var(--border);">
-                    <div class="success-message">
-                        <strong>✅ Your Ikigai Saved!</strong>
-                        <div id="resultText" style="margin-top: 8px; font-size: 0.9em;"></div>
-                    </div>
-
-                    <div class="action-buttons">
-                        <button class="btn-secondary" onclick="shareIkigai()">📢 Share Results</button>
-                        <button class="btn-secondary" onclick="downloadIkigai()">📥 Download as Text</button>
-                    </div>
-
-                    <div class="share-buttons" id="shareButtons" style="display: none;">
-                        <button class="share-btn share-twitter" onclick="shareOnTwitter()">𝕏 Twitter</button>
-                        <button class="share-btn share-facebook" onclick="shareOnFacebook()">f Facebook</button>
-                        <button class="share-btn share-linkedin" onclick="shareOnLinkedIn()">in LinkedIn</button>
-                        <button class="share-btn share-whatsapp" onclick="shareOnWhatsApp()">💬 WhatsApp</button>
+                <div id="ikigaiDiagram" style="display: none; margin-top: 12px; padding-top: 12px; border-top: 2px solid var(--border);">
+                    <div style="background: #e8f5e9; border: 2px solid #51cf66; color: #2d6a2d; padding: 10px; border-radius: 6px;">
+                        <strong>✅ <span id="savedMsg">Saved</span>!</strong>
+                        <div id="resultText" style="margin-top: 6px; font-size: 0.85em;"></div>
                     </div>
                 </div>
             </div>
@@ -477,14 +452,14 @@
         <!-- ACTIVITIES SECTION -->
         <div id="today" class="section">
             <div class="card">
-                <h2>📅 Log Activities</h2>
+                <h2 id="activityTitle">📅 Log Activities</h2>
                 <div class="activity-form">
                     <div class="form-group">
-                        <label for="activityName">Activity *</label>
-                        <input type="text" id="activityName" placeholder="e.g., Programming" required>
+                        <label id="labelActivity">Activity *</label>
+                        <input type="text" id="activityName" required>
                     </div>
                     <div class="form-group">
-                        <label for="ikigaiCategory">Category *</label>
+                        <label id="labelCategory">Category *</label>
                         <select id="ikigaiCategory" required>
                             <option value="">Select...</option>
                             <option value="love">❤️ Love</option>
@@ -494,119 +469,120 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="duration">Duration (min) *</label>
+                        <label id="labelDuration">Duration (min) *</label>
                         <input type="number" id="duration" min="1" required>
                     </div>
                     <div class="form-group">
-                        <label for="flowState">Flow (1-10) *</label>
+                        <label id="labelFlow">Flow (1-10) *</label>
                         <input type="number" id="flowState" min="1" max="10" required>
                     </div>
-                    <button class="btn-primary" onclick="addActivity()" style="grid-column: 1 / -1;">➕ Log Activity</button>
+                    <button class="btn-primary" onclick="addActivity()" style="grid-column: 1 / -1;" id="btnLogActivity">➕ Log</button>
                 </div>
-                <h3>Today's Activities</h3>
+                <h3 id="todayActivities">Today's Activities</h3>
                 <div id="activityList" class="item-grid"></div>
             </div>
         </div>
 
-        <!-- NUTRITION SECTION -->
-        <div id="nutrition" class="section">
+        <!-- GOALS SECTION (NEW) -->
+        <div id="goals" class="section">
             <div class="card">
-                <h2>🍽️ Hara Hachi Bu (80% Rule)</h2>
-
-                <form onsubmit="logMeal(event)">
-                    <div class="activity-form">
-                        <div class="form-group">
-                            <label for="mealName">Meal *</label>
-                            <input type="text" id="mealName" placeholder="Breakfast" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="mealTime">Time *</label>
-                            <input type="time" id="mealTime" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="mealFood">What you ate *</label>
-                            <textarea id="mealFood" placeholder="Describe..." required></textarea>
-                        </div>
-                        <button type="submit" class="btn-primary" style="grid-column: 1 / -1;">➕ Log Meal</button>
+                <h2 id="goalsTitle">🎯 Your Goals</h2>
+                
+                <div class="activity-form">
+                    <div class="form-group">
+                        <label id="labelGoalName">Goal Name *</label>
+                        <input type="text" id="goalName" required>
                     </div>
-                </form>
-                <h3>Today's Meals</h3>
-                <div id="mealList" class="item-grid"></div>
+                    <div class="form-group">
+                        <label id="labelGoalCategory">Category *</label>
+                        <select id="goalCategory" required>
+                            <option value="">Select...</option>
+                            <option value="health">💪 Health</option>
+                            <option value="career">💼 Career</option>
+                            <option value="personal">🎯 Personal</option>
+                            <option value="learning">📚 Learning</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label id="labelGoalTarget">Target (e.g., 30 days)</label>
+                        <input type="text" id="goalTarget" placeholder="e.g., 7 days, 30 days">
+                    </div>
+                    <button class="btn-primary" onclick="addGoal()" style="grid-column: 1 / -1;" id="btnAddGoal">➕ Add Goal</button>
+                </div>
+
+                <h3 id="activeGoals" style="margin-top: 12px;">Active Goals</h3>
+                <div id="goalsList"></div>
+            </div>
+        </div>
+
+        <!-- LEADERBOARD SECTION (NEW) -->
+        <div id="leaderboard" class="section">
+            <div class="card">
+                <h2 id="leaderboardTitle">🏆 Community Leaderboard</h2>
+                
+                <div style="background: var(--card-bg); padding: 10px; border-radius: 6px; margin-bottom: 12px;">
+                    <p id="leaderboardDesc">Top performers this week</p>
+                    <button class="btn-secondary" onclick="addToLeaderboard()" style="margin-top: 8px;" id="btnJoinLeader">🏃 Join Leaderboard</button>
+                </div>
+
+                <h3 id="topPerformers">Top Performers</h3>
+                <div id="leaderboardList" class="leaderboard"></div>
             </div>
         </div>
 
         <!-- WELLNESS SECTION -->
         <div id="wellness" class="section">
             <div class="card">
-                <h2>💪 Wellness Tracking</h2>
+                <h2 id="wellnessTitle">💪 Wellness</h2>
                 <div class="stats-grid">
                     <div class="stat-box">
                         <div class="stat-number" id="avgSleep">0</div>
-                        <div class="stat-label">Avg Sleep</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="stressScore">0</div>
-                        <div class="stat-label">Stress</div>
+                        <div class="stat-label" id="labelSleepAvg">Sleep Avg</div>
                     </div>
                     <div class="stat-box">
                         <div class="stat-number" id="wellnessScore">0</div>
-                        <div class="stat-label">Wellness %</div>
+                        <div class="stat-label" id="labelWellness">Wellness %</div>
                     </div>
                 </div>
 
-                <h3>Log Sleep</h3>
+                <h3 id="logSleepTitle">Log Sleep</h3>
                 <div class="activity-form">
                     <div class="form-group">
-                        <label for="sleepHours">Sleep Hours *</label>
-                        <input type="number" id="sleepHours" min="0" max="12" step="0.5" placeholder="7.5" required>
+                        <label id="labelSleepHours">Sleep Hours *</label>
+                        <input type="number" id="sleepHours" min="0" max="12" step="0.5" required>
                     </div>
                     <div class="form-group">
-                        <label for="sleepQuality">Quality (1-10) *</label>
-                        <input type="number" id="sleepQuality" min="1" max="10" placeholder="8" required>
+                        <label id="labelSleepQuality">Quality (1-10) *</label>
+                        <input type="number" id="sleepQuality" min="1" max="10" required>
                     </div>
-                    <button class="btn-primary" onclick="logSleep()" style="grid-column: 1 / -1;">➕ Log Sleep</button>
+                    <button class="btn-primary" onclick="logSleep()" style="grid-column: 1 / -1;" id="btnLogSleep">➕ Log Sleep</button>
                 </div>
 
-                <h3 style="margin-top: 15px;">Log Stress</h3>
-                <div class="activity-form">
-                    <div class="form-group">
-                        <label for="stressLevel">Stress Level (1-10) *</label>
-                        <input type="range" id="stressLevel" min="1" max="10" value="5">
-                        <div style="color: var(--primary); font-weight: 600; margin-top: 4px;">Level: <span id="stressValue">5</span>/10</div>
-                    </div>
-                    <button class="btn-primary" onclick="logStress()" style="grid-column: 1 / 1;">➕ Log</button>
-                </div>
-
-                <div id="wellnessList" class="item-grid" style="margin-top: 15px;"></div>
+                <div id="wellnessList" class="item-grid" style="margin-top: 10px;"></div>
             </div>
         </div>
 
         <!-- ANALYTICS SECTION -->
         <div id="analytics" class="section">
             <div class="card">
-                <h2>📊 Your Dashboard</h2>
+                <h2 id="analyticsTitle">📊 Dashboard</h2>
                 <div class="stats-grid">
                     <div class="stat-box">
                         <div class="stat-number" id="totalActivities">0</div>
-                        <div class="stat-label">Activities Today</div>
+                        <div class="stat-label" id="labelTotalActivities">Activities</div>
                     </div>
                     <div class="stat-box">
                         <div class="stat-number" id="totalMinutes">0</div>
-                        <div class="stat-label">Minutes</div>
+                        <div class="stat-label" id="labelTotalMinutes">Minutes</div>
                     </div>
                     <div class="stat-box">
                         <div class="stat-number" id="avgFlow">0</div>
-                        <div class="stat-label">Avg Flow</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="mealsLogged">0</div>
-                        <div class="stat-label">Meals</div>
+                        <div class="stat-label" id="labelAvgFlow">Avg Flow</div>
                     </div>
                 </div>
-                <div class="action-buttons">
-                    <button class="btn-secondary" onclick="exportData()">💾 Export All Data</button>
-                    <button class="btn-secondary" onclick="generateReport()">📄 Weekly Report</button>
-                    <button class="btn-secondary" onclick="clearAllData()">🗑️ Clear Data</button>
+                <div class="activity-form">
+                    <button class="btn-secondary" onclick="generateWeeklyReport()" id="btnReport">📄 Weekly Report</button>
+                    <button class="btn-secondary" onclick="exportData()" id="btnExport">💾 Export Data</button>
                 </div>
             </div>
         </div>
@@ -616,69 +592,339 @@
     <div id="settingsModal" class="modal">
         <div class="modal-content">
             <button class="close-modal" onclick="closeSettings()">✕</button>
-            <h2 style="margin-bottom: 15px;">⚙️ Settings</h2>
+            <h2 id="settingsTitle">⚙️ Settings</h2>
             
-            <h3 style="margin-top: 15px;">Theme</h3>
+            <h3 id="settingsLanguage" style="margin-top: 15px;">Language</h3>
             <div class="activity-form">
-                <button class="btn-secondary" onclick="setTheme('light'); closeSettings()">☀️ Light Mode</button>
-                <button class="btn-secondary" onclick="setTheme('dark'); closeSettings()">🌙 Dark Mode</button>
+                <button class="btn-secondary" onclick="changeLanguage('en'); closeSettings()" style="grid-column: 1/1;">🇬🇧 English</button>
+                <button class="btn-secondary" onclick="changeLanguage('es'); closeSettings()">🇪🇸 Español</button>
+                <button class="btn-secondary" onclick="changeLanguage('hi'); closeSettings()">🇮🇳 हिन्दी</button>
+                <button class="btn-secondary" onclick="changeLanguage('ta'); closeSettings()">🇮🇳 தமிழ்</button>
+                <button class="btn-secondary" onclick="changeLanguage('ka'); closeSettings()">🇮🇳 ಕನ್ನಡ</button>
             </div>
 
-            <h3 style="margin-top: 15px;">Data</h3>
+            <h3 id="settingsTheme" style="margin-top: 15px;">Theme</h3>
             <div class="activity-form">
-                <button class="btn-secondary" onclick="exportData(); closeSettings()">💾 Export Data</button>
-                <button class="btn-secondary" onclick="clearAllData(); closeSettings()">🗑️ Clear All</button>
+                <button class="btn-secondary" onclick="setTheme('light'); closeSettings()">☀️ Light</button>
+                <button class="btn-secondary" onclick="setTheme('dark'); closeSettings()">🌙 Dark</button>
             </div>
 
-            <h3 style="margin-top: 15px;">About</h3>
-            <p style="color: var(--text-light); font-size: 0.9em;">
-                <strong>Ikigai Journey v2.0</strong><br>
-                Find your purpose and live well<br>
-                Based on Japanese longevity principles
-            </p>
+            <h3 id="settingsData" style="margin-top: 15px;">Data</h3>
+            <div class="activity-form">
+                <button class="btn-secondary" onclick="exportData(); closeSettings()" id="btnExportSettings">💾 Export</button>
+                <button class="btn-secondary" onclick="clearAllData(); closeSettings()" id="btnClear">🗑️ Clear All</button>
+            </div>
         </div>
     </div>
 
     <script>
+        // TRANSLATIONS
+        const translations = {
+            en: {
+                appTitle: "Ikigai Journey",
+                navDiscover: "Discover",
+                navActivity: "Activity",
+                navGoals: "Goals",
+                navLeader: "Leader",
+                navWellness: "Wellness",
+                navStats: "Stats",
+                discoverTitle: "🌸 Discover Your Ikigai",
+                labelLove: "❤️ What do you LOVE?",
+                labelGood: "⭐ What are you GOOD AT?",
+                labelNeed: "🌍 What WORLD NEEDS?",
+                labelPaid: "💰 What PAID FOR?",
+                btnGenerate: "✨ Generate",
+                savedMsg: "Your Ikigai Saved",
+                activityTitle: "📅 Log Activities",
+                labelActivity: "Activity",
+                labelCategory: "Category",
+                labelDuration: "Duration (min)",
+                labelFlow: "Flow (1-10)",
+                btnLogActivity: "➕ Log Activity",
+                todayActivities: "Today's Activities",
+                goalsTitle: "🎯 Your Goals",
+                labelGoalName: "Goal Name",
+                labelGoalCategory: "Category",
+                labelGoalTarget: "Target",
+                btnAddGoal: "➕ Add Goal",
+                activeGoals: "Active Goals",
+                leaderboardTitle: "🏆 Community Leaderboard",
+                leaderboardDesc: "Top performers this week",
+                btnJoinLeader: "🏃 Join Leaderboard",
+                topPerformers: "Top Performers",
+                wellnessTitle: "💪 Wellness",
+                labelSleepAvg: "Sleep Avg",
+                labelWellness: "Wellness %",
+                logSleepTitle: "Log Sleep",
+                labelSleepHours: "Sleep Hours",
+                labelSleepQuality: "Quality (1-10)",
+                btnLogSleep: "➕ Log Sleep",
+                analyticsTitle: "📊 Dashboard",
+                labelTotalActivities: "Activities Today",
+                labelTotalMinutes: "Minutes",
+                labelAvgFlow: "Avg Flow",
+                btnReport: "📄 Weekly Report",
+                btnExport: "💾 Export Data",
+                settingsTitle: "⚙️ Settings",
+                settingsLanguage: "🌍 Language",
+                settingsTheme: "🎨 Theme",
+                settingsData: "💾 Data Management",
+                btnExportSettings: "💾 Export Data",
+                btnClear: "🗑️ Clear All Data"
+            },
+            es: {
+                appTitle: "Viaje Ikigai",
+                navDiscover: "Descubrir",
+                navActivity: "Actividad",
+                navGoals: "Metas",
+                navLeader: "Líder",
+                navWellness: "Bienestar",
+                navStats: "Estadísticas",
+                discoverTitle: "🌸 Descubre tu Ikigai",
+                labelLove: "❤️ ¿Qué te ENCANTA?",
+                labelGood: "⭐ ¿En qué eres BUENO?",
+                labelNeed: "🌍 ¿Qué necesita el MUNDO?",
+                labelPaid: "💰 ¿Por qué PAGARÍAN?",
+                btnGenerate: "✨ Generar",
+                savedMsg: "Tu Ikigai Guardado",
+                activityTitle: "📅 Registrar Actividades",
+                labelActivity: "Actividad",
+                labelCategory: "Categoría",
+                labelDuration: "Duración (min)",
+                labelFlow: "Flujo (1-10)",
+                btnLogActivity: "➕ Registrar",
+                todayActivities: "Actividades de Hoy",
+                goalsTitle: "🎯 Tus Metas",
+                labelGoalName: "Nombre de Meta",
+                labelGoalCategory: "Categoría",
+                labelGoalTarget: "Objetivo",
+                btnAddGoal: "➕ Agregar Meta",
+                activeGoals: "Metas Activas",
+                leaderboardTitle: "🏆 Tabla de Posiciones",
+                leaderboardDesc: "Mejores desempeños esta semana",
+                btnJoinLeader: "🏃 Unirse",
+                topPerformers: "Mejores Desempeños",
+                wellnessTitle: "💪 Bienestar",
+                labelSleepAvg: "Promedio Sueño",
+                labelWellness: "Bienestar %",
+                logSleepTitle: "Registrar Sueño",
+                labelSleepHours: "Horas Sueño",
+                labelSleepQuality: "Calidad (1-10)",
+                btnLogSleep: "➕ Registrar",
+                analyticsTitle: "📊 Panel",
+                labelTotalActivities: "Actividades Hoy",
+                labelTotalMinutes: "Minutos",
+                labelAvgFlow: "Flujo Promedio",
+                btnReport: "📄 Informe Semanal",
+                btnExport: "💾 Exportar Datos",
+                settingsTitle: "⚙️ Configuración",
+                settingsLanguage: "🌍 Idioma",
+                settingsTheme: "🎨 Tema",
+                settingsData: "💾 Datos",
+                btnExportSettings: "💾 Exportar",
+                btnClear: "🗑️ Limpiar Todo"
+            },
+            hi: {
+                appTitle: "इकिगाई यात्रा",
+                navDiscover: "खोजें",
+                navActivity: "गतिविधि",
+                navGoals: "लक्ष्य",
+                navLeader: "लीडर",
+                navWellness: "स्वास्थ्य",
+                navStats: "आंकड़े",
+                discoverTitle: "🌸 अपनी इकिगाई खोजें",
+                labelLove: "❤️ आप क्या प्यार करते हैं?",
+                labelGood: "⭐ आप क्या अच्छा करते हैं?",
+                labelNeed: "🌍 दुनिया को क्या चाहिए?",
+                labelPaid: "💰 आपको किस के लिए भुगतान किया जा सकता है?",
+                btnGenerate: "✨ उत्पन्न करें",
+                savedMsg: "आपकी इकिगाई सहेजी गई",
+                activityTitle: "📅 गतिविधि लॉग करें",
+                labelActivity: "गतिविधि",
+                labelCategory: "श्रेणी",
+                labelDuration: "अवधि (मिनट)",
+                labelFlow: "प्रवाह (1-10)",
+                btnLogActivity: "➕ लॉग करें",
+                todayActivities: "आज की गतिविधियां",
+                goalsTitle: "🎯 आपके लक्ष्य",
+                labelGoalName: "लक्ष्य का नाम",
+                labelGoalCategory: "श्रेणी",
+                labelGoalTarget: "लक्ष्य",
+                btnAddGoal: "➕ लक्ष्य जोड़ें",
+                activeGoals: "सक्रिय लक्ष्य",
+                leaderboardTitle: "🏆 सामुदायिक लीडरबोर्ड",
+                leaderboardDesc: "इस सप्ताह के शीर्ष प्रदर्शक",
+                btnJoinLeader: "🏃 शामिल हों",
+                topPerformers: "शीर्ष प्रदर्शक",
+                wellnessTitle: "💪 कल्याण",
+                labelSleepAvg: "नींद औसत",
+                labelWellness: "कल्याण %",
+                logSleepTitle: "नींद लॉग करें",
+                labelSleepHours: "नींद के घंटे",
+                labelSleepQuality: "गुणवत्ता (1-10)",
+                btnLogSleep: "➕ लॉग करें",
+                analyticsTitle: "📊 डैशबोर्ड",
+                labelTotalActivities: "आज की गतिविधियां",
+                labelTotalMinutes: "मिनट",
+                labelAvgFlow: "औसत प्रवाह",
+                btnReport: "📄 साप्ताहिक रिपोर्ट",
+                btnExport: "💾 डेटा निर्यात करें",
+                settingsTitle: "⚙️ सेटिंग्स",
+                settingsLanguage: "🌍 भाषा",
+                settingsTheme: "🎨 विषय",
+                settingsData: "💾 डेटा",
+                btnExportSettings: "💾 निर्यात करें",
+                btnClear: "🗑️ सब कुछ साफ़ करें"
+            },
+            ta: {
+                appTitle: "இகிகாய் பயணம்",
+                navDiscover: "கண்டுபிடி",
+                navActivity: "செயல்பாடு",
+                navGoals: "লক্ష्य",
+                navLeader: "தலைவர்",
+                navWellness: "ஆரோக்கியம்",
+                navStats: "புள்ளிவிவரங்கள்",
+                discoverTitle: "🌸 உங்கள் இகிகாய் கண்டுபிடி",
+                labelLove: "❤️ நீ சொல்லலயே விரும்புவது?",
+                labelGood: "⭐ நீ நன்றாக செய்வது?",
+                labelNeed: "🌍 உலக தேவை?",
+                labelPaid: "💰 ஆபஸ்பனத்திற்கு நீ பெறலாம்?",
+                btnGenerate: "✨ உருவாக்கு",
+                savedMsg: "உங்கள் இகிகாய் சேமிக்கப்பட்டது",
+                activityTitle: "📅 செயல்பாடு பதிவு",
+                labelActivity: "செயல்பாடு",
+                labelCategory: "வகை",
+                labelDuration: "கால அளவு (நிமிடம்)",
+                labelFlow: "ஓட்டம் (1-10)",
+                btnLogActivity: "➕ பதிவு",
+                todayActivities: "இன்றைய செயல்பாடுகள்",
+                goalsTitle: "🎯 உங்கள் இலக்குகள்",
+                labelGoalName: "இலக்குப் பெயர்",
+                labelGoalCategory: "வகை",
+                labelGoalTarget: "இலக்கு",
+                btnAddGoal: "➕ இலக்கு சேர்க்கவும்",
+                activeGoals: "செயல்பட்ட இலக்குகள்",
+                leaderboardTitle: "🏆 சமூக தலைமைப் பட்டியல்",
+                leaderboardDesc: "இந்த வாரத்தின் சிறந்த செயல்திறன்",
+                btnJoinLeader: "🏃 சேரவும்",
+                topPerformers: "சிறந்த செயல்திறன்",
+                wellnessTitle: "💪 நலம்",
+                labelSleepAvg: "சராசரி தூக்கம்",
+                labelWellness: "நலம் %",
+                logSleepTitle: "தூக்கம் பதிவு",
+                labelSleepHours: "தூக்கம் மணிநேரம்",
+                labelSleepQuality: "தரம் (1-10)",
+                btnLogSleep: "➕ பதிவு",
+                analyticsTitle: "📊 கட்டுப்பாட்டுப் பலகை",
+                labelTotalActivities: "இன்றைய செயல்பாடுகள்",
+                labelTotalMinutes: "நிமிடங்கள்",
+                labelAvgFlow: "சராசரி ஓட்டம்",
+                btnReport: "📄 வாரிக அறிக்கை",
+                btnExport: "💾 தரவு ஏற்றுமதி",
+                settingsTitle: "⚙️ அமைப்புகள்",
+                settingsLanguage: "🌍 மொழி",
+                settingsTheme: "🎨 தீம்",
+                settingsData: "💾 தரவு",
+                btnExportSettings: "💾 ஏற்றுமதி",
+                btnClear: "🗑️ அனைத்தையும் அழி"
+            },
+            ka: {
+                appTitle: "ಇಕಿಗೈ ಯಾತ್ರೆ",
+                navDiscover: "ಆವಿಷ್ಕರಿಸಿ",
+                navActivity: "ಚಟುವಟಿಕೆ",
+                navGoals: "ಗುರಿಗಳು",
+                navLeader: "ನಾಯಕ",
+                navWellness: "ಸುಸ್ಥತೆ",
+                navStats: "ಅಂಕಿಅಂಶಗಳು",
+                discoverTitle: "🌸 ನಿಮ್ಮ ಇಕಿಗೈ ಆವಿಷ್ಕರಿಸಿ",
+                labelLove: "❤️ ನೀವು ಏನು ಪ್ರೇಮಿಸುತ್ತೀರಿ?",
+                labelGood: "⭐ ನೀವು ಭಾಗ್ಯವಂತರ ಗೋ ಚೆಂಡನೂ?",
+                labelNeed: "🌍 ವಿಶ್ವಕ್ಕೆ ಯಾವುದು ಬೇಕು?",
+                labelPaid: "💰 ನಿಮಗೆ ಅದರ ಹೊಗೆ?",
+                btnGenerate: "✨ ಉತ್ಪಾದಿಸಿ",
+                savedMsg: "ನಿಮ್ಮ ಇಕಿಗೈ ಉಳಿಸಲಾಗಿದೆ",
+                activityTitle: "📅 ಚಟುವಟಿಕೆ ಲಾಗ್ ಮಾಡಿ",
+                labelActivity: "ಚಟುವಟಿಕೆ",
+                labelCategory: "ವರ್ಗ",
+                labelDuration: "ಅವಧಿ (ನಿಮಿಷಗಳು)",
+                labelFlow: "ಹರಿವು (1-10)",
+                btnLogActivity: "➕ ಲಾಗ್ ಮಾಡಿ",
+                todayActivities: "ಇಂದಿನ ಚಟುವಟಿಕೆಗಳು",
+                goalsTitle: "🎯 ನಿಮ್ಮ ಗುರಿಗಳು",
+                labelGoalName: "ಗುರಿ ಹೆಸರು",
+                labelGoalCategory: "ವರ್ಗ",
+                labelGoalTarget: "ಗುರಿ",
+                btnAddGoal: "➕ ಗುರಿ ಸೇರಿಸಿ",
+                activeGoals: "ಸಕ್ರಿಯ ಗುರಿಗಳು",
+                leaderboardTitle: "🏆 ಸಮುದಾಯ ಲೀಡರ್‌ಬೋರ್ಡ್",
+                leaderboardDesc: "ಈ ವಾರದ ಅಗ್ರ ಪ್ರದರ್ಶಕರು",
+                btnJoinLeader: "🏃 ಸೇರಿಸಿ",
+                topPerformers: "ಅಗ್ರ ಪ್ರದರ್ಶಕರು",
+                wellnessTitle: "💪 ಸುಸ್ಥತೆ",
+                labelSleepAvg: "ಸರಾಸರಿ ನಿದ್ರೆ",
+                labelWellness: "ಸುಸ್ಥತೆ %",
+                logSleepTitle: "ನಿದ್ರೆ ಲಾಗ್ ಮಾಡಿ",
+                labelSleepHours: "ನಿದ್ರೆ ಗಂಟೆಗಳು",
+                labelSleepQuality: "ಗುಣಮಾನ (1-10)",
+                btnLogSleep: "➕ ಲಾಗ್ ಮಾಡಿ",
+                analyticsTitle: "📊 ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+                labelTotalActivities: "ಇಂದಿನ ಚಟುವಟಿಕೆಗಳು",
+                labelTotalMinutes: "ನಿಮಿಷಗಳು",
+                labelAvgFlow: "ಸರಾಸರಿ ಹರಿವು",
+                btnReport: "📄 ವಾರಿಕ ವರದಿ",
+                btnExport: "💾 ಡೇಟಾ ರಫ್ತು ಮಾಡಿ",
+                settingsTitle: "⚙️ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+                settingsLanguage: "🌍 ಭಾಷೆ",
+                settingsTheme: "🎨 ಥೀಮ್",
+                settingsData: "💾 ಡೇಟಾ",
+                btnExportSettings: "💾 ರಫ್ತು ಮಾಡಿ",
+                btnClear: "🗑️ ಎಲ್ಲವನ್ನೂ ತೆರವುಗೊಳಿಸಿ"
+            }
+        };
+
+        let currentLanguage = localStorage.getItem('language') || 'en';
         let activities = JSON.parse(localStorage.getItem('activities')) || [];
-        let meals = JSON.parse(localStorage.getItem('meals')) || [];
+        let goals = JSON.parse(localStorage.getItem('goals')) || [];
+        let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
         let ikigaiData = JSON.parse(localStorage.getItem('ikigaiData')) || null;
         let wellnessData = JSON.parse(localStorage.getItem('wellnessData')) || [];
         let theme = localStorage.getItem('theme') || 'light';
+        let userName = localStorage.getItem('userName') || `User${Math.floor(Math.random() * 1000)}`;
 
         // Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
-                    .then(() => console.log('✅ Service Worker registered'))
-                    .catch(err => console.log('SW failed:', err));
+                    .then(() => console.log('✅ SW registered'))
+                    .catch(err => console.log('SW error:', err));
             });
         }
 
         // Initialize
         window.addEventListener('load', () => {
             setTheme(theme);
-            renderActivities();
-            renderMeals();
-            updateAnalytics();
-            updateWellness();
-
-            document.getElementById('stressLevel').addEventListener('change', (e) => {
-                document.getElementById('stressValue').textContent = e.target.value;
-            });
-
-            if (ikigaiData) {
-                document.getElementById('ikigaiDiagram').style.display = 'block';
-                document.getElementById('resultText').innerHTML = `
-                    <strong>❤️ Passion:</strong> ${ikigaiData.love}<br>
-                    <strong>⭐ Talent:</strong> ${ikigaiData.good}<br>
-                    <strong>🌍 Mission:</strong> ${ikigaiData.need}<br>
-                    <strong>💼 Vocation:</strong> ${ikigaiData.paid}
-                `;
-            }
+            changeLanguage(currentLanguage);
+            updateUI();
         });
 
-        // THEME MANAGEMENT
+        function updateUI() {
+            Object.keys(translations[currentLanguage]).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.textContent = translations[currentLanguage][key];
+                }
+            });
+        }
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('language', lang);
+            document.documentElement.lang = lang;
+            updateUI();
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
         function setTheme(themeName) {
             theme = themeName;
             localStorage.setItem('theme', themeName);
@@ -689,7 +935,6 @@
             }
         }
 
-        // SETTINGS MODAL
         function openSettings() {
             document.getElementById('settingsModal').classList.add('active');
         }
@@ -698,114 +943,6 @@
             document.getElementById('settingsModal').classList.remove('active');
         }
 
-        // EXPORT DATA
-        function exportData() {
-            const data = {
-                ikigai: ikigaiData,
-                activities: activities,
-                meals: meals,
-                wellness: wellnessData,
-                exportDate: new Date().toLocaleString()
-            };
-
-            const json = JSON.stringify(data, null, 2);
-            const blob = new Blob([json], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `ikigai-data-${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            alert('✅ Data exported successfully!');
-        }
-
-        // GENERATE REPORT
-        function generateReport() {
-            const lastWeek = new Date(new Date().getTime() - 7*24*60*60*1000).toDateString();
-            const weekActivities = activities.filter(a => new Date(a.date) >= new Date(lastWeek));
-
-            let report = `IKIGAI JOURNEY - WEEKLY REPORT\n`;
-            report += `Generated: ${new Date().toLocaleString()}\n\n`;
-            report += `IKIGAI PROFILE:\n`;
-            if (ikigaiData) {
-                report += `❤️ Passion: ${ikigaiData.love}\n`;
-                report += `⭐ Talent: ${ikigaiData.good}\n`;
-                report += `🌍 Mission: ${ikigaiData.need}\n`;
-                report += `💼 Vocation: ${ikigaiData.paid}\n\n`;
-            }
-            report += `WEEKLY STATS:\n`;
-            report += `Activities: ${weekActivities.length}\n`;
-            report += `Total Minutes: ${weekActivities.reduce((sum, a) => sum + a.duration, 0)}\n`;
-            report += `Avg Flow State: ${(weekActivities.reduce((sum, a) => sum + a.flowState, 0) / (weekActivities.length || 1)).toFixed(1)}\n`;
-
-            const blob = new Blob([report], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `ikigai-report-${new Date().toISOString().split('T')[0]}.txt`;
-            a.click();
-            URL.revokeObjectURL(url);
-            alert('✅ Report generated!');
-        }
-
-        // SHARE ON SOCIAL MEDIA
-        function shareIkigai() {
-            document.getElementById('shareButtons').style.display = 'flex';
-        }
-
-        function shareOnTwitter() {
-            const text = `I just discovered my Ikigai! 🌸\n❤️ Passion: ${ikigaiData.love}\n⭐ Talent: ${ikigaiData.good}\n🌍 Mission: ${ikigaiData.need}\n💼 Vocation: ${ikigaiData.paid}\n\nFind yours: ${window.location.href}`;
-            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-            window.open(url, '_blank');
-        }
-
-        function shareOnFacebook() {
-            const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=I%20just%20discovered%20my%20Ikigai!`;
-            window.open(url, '_blank');
-        }
-
-        function shareOnLinkedIn() {
-            const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`;
-            window.open(url, '_blank');
-        }
-
-        function shareOnWhatsApp() {
-            const text = `I just discovered my Ikigai on Ikigai Journey! Find yours: ${window.location.href}`;
-            const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-            window.open(url, '_blank');
-        }
-
-        function downloadIkigai() {
-            if (!ikigaiData) {
-                alert('Please discover your ikigai first!');
-                return;
-            }
-
-            const text = `MY IKIGAI\n\n❤️ What I Love:\n${ikigaiData.love}\n\n⭐ What I'm Good At:\n${ikigaiData.good}\n\n🌍 What the World Needs:\n${ikigaiData.need}\n\n💰 What I Can Be Paid For:\n${ikigaiData.paid}`;
-
-            const blob = new Blob([text], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'my-ikigai.txt';
-            a.click();
-            URL.revokeObjectURL(url);
-            alert('✅ Ikigai downloaded!');
-        }
-
-        // CLEAR DATA
-        function clearAllData() {
-            if (confirm('Are you sure? This will delete ALL your data!')) {
-                localStorage.clear();
-                activities = [];
-                meals = [];
-                ikigaiData = null;
-                wellnessData = [];
-                location.reload();
-            }
-        }
-
-        // SUBMIT IKIGAI
         function submitIkigai(event) {
             event.preventDefault();
             const love = document.getElementById('love').value;
@@ -817,112 +954,127 @@
             localStorage.setItem('ikigaiData', JSON.stringify(ikigaiData));
 
             document.getElementById('resultText').innerHTML = `
-                <strong>❤️ Passion:</strong> ${love}<br>
-                <strong>⭐ Talent:</strong> ${good}<br>
-                <strong>🌍 Mission:</strong> ${need}<br>
-                <strong>💼 Vocation:</strong> ${paid}
+                ❤️ ${love}<br>
+                ⭐ ${good}<br>
+                🌍 ${need}<br>
+                💰 ${paid}
             `;
-
             document.getElementById('ikigaiDiagram').style.display = 'block';
-            document.getElementById('ikigaiForm').reset();
-            alert('✅ Ikigai saved!');
+            alert('✅ ' + translations[currentLanguage].savedMsg);
         }
 
-        // ADD ACTIVITY
         function addActivity() {
             const name = document.getElementById('activityName').value;
             const category = document.getElementById('ikigaiCategory').value;
             const duration = document.getElementById('duration').value;
             const flowState = document.getElementById('flowState').value;
 
-            if (!name || !category || !duration || !flowState) {
-                alert('Fill all fields!');
-                return;
-            }
+            if (!name || !category) { alert('Fill required fields!'); return; }
 
             activities.push({
                 id: Date.now(),
                 name, category,
                 duration: parseInt(duration),
                 flowState: parseInt(flowState),
-                time: new Date().toLocaleTimeString(),
                 date: new Date().toDateString()
             });
 
             localStorage.setItem('activities', JSON.stringify(activities));
-            renderActivities();
-            updateAnalytics();
             document.getElementById('activityName').value = '';
             document.getElementById('ikigaiCategory').value = '';
             document.getElementById('duration').value = '';
             document.getElementById('flowState').value = '';
-            alert('✅ Activity logged!');
+            renderActivities();
+            updateAnalytics();
         }
 
         function renderActivities() {
             const today = new Date().toDateString();
             const todaysActivities = activities.filter(a => a.date === today);
-
             document.getElementById('activityList').innerHTML = todaysActivities.length === 0
-                ? '<p style="grid-column: 1/-1; text-align: center; color: var(--text-light);">No activities logged</p>'
+                ? '<p style="grid-column: 1/-1; text-align: center;">No activities</p>'
                 : todaysActivities.map(a => `
                     <div class="item-card">
                         <div class="item-name">${a.name}</div>
-                        <div class="item-meta">⏱️ ${a.duration}min | 🎯 Flow: ${a.flowState}/10</div>
+                        <div class="item-meta">⏱️ ${a.duration}min | 🎯 ${a.flowState}/10</div>
                     </div>
                 `).join('');
         }
 
-        // LOG MEAL
-        function logMeal(event) {
-            event.preventDefault();
-            const name = document.getElementById('mealName').value;
-            const time = document.getElementById('mealTime').value;
-            const food = document.getElementById('mealFood').value;
+        function addGoal() {
+            const name = document.getElementById('goalName').value;
+            const category = document.getElementById('goalCategory').value;
+            const target = document.getElementById('goalTarget').value || '7 days';
 
-            if (!name || !time || !food) {
-                alert('Fill all fields!');
-                return;
-            }
+            if (!name || !category) { alert('Fill required fields!'); return; }
 
-            meals.push({
+            goals.push({
                 id: Date.now(),
-                name, time, food,
-                date: new Date().toDateString()
+                name, category, target,
+                progress: 0,
+                createdDate: new Date().toDateString()
             });
 
-            localStorage.setItem('meals', JSON.stringify(meals));
-            renderMeals();
-            updateAnalytics();
-            document.getElementById('mealName').value = '';
-            document.getElementById('mealTime').value = '';
-            document.getElementById('mealFood').value = '';
-            alert('✅ Meal logged! Hara Hachi Bu! 🍽️');
+            localStorage.setItem('goals', JSON.stringify(goals));
+            document.getElementById('goalName').value = '';
+            document.getElementById('goalCategory').value = '';
+            document.getElementById('goalTarget').value = '';
+            renderGoals();
         }
 
-        function renderMeals() {
-            const today = new Date().toDateString();
-            const todaysMeals = meals.filter(m => m.date === today);
-
-            document.getElementById('mealList').innerHTML = todaysMeals.length === 0
-                ? '<p style="grid-column: 1/-1; text-align: center; color: var(--text-light);">No meals logged</p>'
-                : todaysMeals.map(m => `
-                    <div class="item-card">
-                        <div class="item-name">🍽️ ${m.name}</div>
-                        <div class="item-meta">${m.time} - ${m.food}</div>
+        function renderGoals() {
+            document.getElementById('goalsList').innerHTML = goals.length === 0
+                ? '<p>No active goals</p>'
+                : goals.map(g => `
+                    <div class="goal-card">
+                        <div><strong>${g.name}</strong> (${g.category})</div>
+                        <div style="font-size: 0.85em; color: var(--text-light);">Target: ${g.target}</div>
+                        <div class="goal-progress">
+                            <div class="goal-progress-bar" style="width: ${g.progress}%"></div>
+                        </div>
+                        <button class="btn-secondary" onclick="removeGoal(${g.id})" style="margin-top: 8px; width: 100%;">Remove</button>
                     </div>
                 `).join('');
         }
 
-        // LOG SLEEP
+        function removeGoal(id) {
+            goals = goals.filter(g => g.id !== id);
+            localStorage.setItem('goals', JSON.stringify(goals));
+            renderGoals();
+        }
+
+        function addToLeaderboard() {
+            const score = activities.filter(a => a.date === new Date().toDateString()).length * 10;
+            leaderboard.push({
+                name: userName,
+                score: score,
+                date: new Date().toDateString()
+            });
+            leaderboard.sort((a, b) => b.score - a.score);
+            leaderboard = leaderboard.slice(0, 10);
+
+            localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+            renderLeaderboard();
+            alert('✅ Added to leaderboard!');
+        }
+
+        function renderLeaderboard() {
+            document.getElementById('leaderboardList').innerHTML = leaderboard.length === 0
+                ? '<p>Join the leaderboard!</p>'
+                : leaderboard.map((entry, index) => `
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank">#${index + 1}</div>
+                        <div class="leaderboard-name">${entry.name}</div>
+                        <div class="leaderboard-score">${entry.score} pts</div>
+                    </div>
+                `).join('');
+        }
+
         function logSleep() {
             const hours = parseFloat(document.getElementById('sleepHours').value);
             const quality = parseInt(document.getElementById('sleepQuality').value);
 
-            if (!hours || !quality) {
-                alert('Fill all fields!');
-                return;
-            }
+            if (!hours || !quality) { alert('Fill required fields!'); return; }
 
             wellnessData.push({
                 id: Date.now(),
@@ -932,57 +1084,32 @@
             });
 
             localStorage.setItem('wellnessData', JSON.stringify(wellnessData));
-            updateWellness();
             document.getElementById('sleepHours').value = '';
             document.getElementById('sleepQuality').value = '';
-            alert('✅ Sleep logged!');
-        }
-
-        // LOG STRESS
-        function logStress() {
-            const level = parseInt(document.getElementById('stressLevel').value);
-
-            wellnessData.push({
-                id: Date.now(),
-                type: 'stress',
-                level,
-                date: new Date().toDateString()
-            });
-
-            localStorage.setItem('wellnessData', JSON.stringify(wellnessData));
             updateWellness();
-            alert('✅ Stress logged!');
         }
 
         function updateWellness() {
             const today = new Date().toDateString();
-            const todaysWellness = wellnessData.filter(w => w.date === today);
-            const sleepData = todaysWellness.filter(w => w.type === 'sleep');
-            const stressData = todaysWellness.filter(w => w.type === 'stress');
+            const todaysSleep = wellnessData.filter(w => w.type === 'sleep' && w.date === today);
 
-            const avgSleep = sleepData.length > 0
-                ? (sleepData.reduce((sum, w) => sum + w.hours, 0) / sleepData.length).toFixed(1)
-                : 0;
-
-            const avgStress = stressData.length > 0
-                ? Math.round(stressData.reduce((sum, w) => sum + w.level, 0) / stressData.length)
+            const avgSleep = todaysSleep.length > 0
+                ? (todaysSleep.reduce((sum, w) => sum + w.hours, 0) / todaysSleep.length).toFixed(1)
                 : 0;
 
             let score = 50;
-            if (avgSleep >= 7 && avgSleep <= 9) score += 25;
-            if (avgStress <= 4) score += 15;
-            score = Math.min(100, score);
+            if (avgSleep >= 7 && avgSleep <= 9) score += 35;
+            if (activities.filter(a => a.date === today).length > 0) score += 15;
 
             document.getElementById('avgSleep').textContent = avgSleep;
-            document.getElementById('stressScore').textContent = avgStress;
-            document.getElementById('wellnessScore').textContent = score;
+            document.getElementById('wellnessScore').textContent = Math.min(100, score);
 
-            document.getElementById('wellnessList').innerHTML = todaysWellness.length === 0
-                ? '<p style="grid-column: 1/-1; text-align: center; color: var(--text-light);">No data logged</p>'
-                : todaysWellness.map(w => `
+            document.getElementById('wellnessList').innerHTML = todaysSleep.length === 0
+                ? '<p>No sleep logged</p>'
+                : todaysSleep.map(w => `
                     <div class="item-card">
-                        <div class="item-name">${w.type === 'sleep' ? '😴 Sleep' : '😌 Stress'}</div>
-                        <div class="item-meta">${w.type === 'sleep' ? `${w.hours}h | Quality: ${w.quality}/10` : `Level: ${w.level}/10`}</div>
+                        <div class="item-name">😴 Sleep</div>
+                        <div class="item-meta">${w.hours}h | Quality: ${w.quality}/10</div>
                     </div>
                 `).join('');
         }
@@ -990,7 +1117,6 @@
         function updateAnalytics() {
             const today = new Date().toDateString();
             const todaysActivities = activities.filter(a => a.date === today);
-            const todaysMeals = meals.filter(m => m.date === today);
 
             const totalMinutes = todaysActivities.reduce((sum, a) => sum + a.duration, 0);
             const avgFlow = todaysActivities.length > 0
@@ -1000,24 +1126,68 @@
             document.getElementById('totalActivities').textContent = todaysActivities.length;
             document.getElementById('totalMinutes').textContent = totalMinutes;
             document.getElementById('avgFlow').textContent = avgFlow;
-            document.getElementById('mealsLogged').textContent = todaysMeals.length;
+        }
+
+        function generateWeeklyReport() {
+            const lastWeek = new Date(new Date().getTime() - 7*24*60*60*1000).toDateString();
+            const weekActivities = activities.filter(a => new Date(a.date) >= new Date(lastWeek));
+
+            let report = `IKIGAI JOURNEY - WEEKLY REPORT\n`;
+            report += `Week of: ${lastWeek}\n\n`;
+            report += `Activities: ${weekActivities.length}\n`;
+            report += `Total Minutes: ${weekActivities.reduce((sum, a) => sum + a.duration, 0)}\n`;
+            report += `Avg Flow: ${(weekActivities.reduce((sum, a) => sum + a.flowState, 0) / (weekActivities.length || 1)).toFixed(1)}\n`;
+            report += `Active Goals: ${goals.length}\n`;
+
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ikigai-report-${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+        }
+
+        function exportData() {
+            const data = { ikigaiData, activities, goals, leaderboard, wellnessData, exportDate: new Date() };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ikigai-data-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            alert('✅ Data exported!');
+        }
+
+        function clearAllData() {
+            if (confirm('Delete ALL data?')) {
+                localStorage.clear();
+                location.reload();
+            }
         }
 
         function switchTab(tabName) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
+
+            if (tabName === 'goals') renderGoals();
+            if (tabName === 'leaderboard') renderLeaderboard();
+            if (tabName === 'wellness') updateWellness();
+            if (tabName === 'analytics') updateAnalytics();
         }
 
-        // Close modal when clicking outside
         document.addEventListener('click', (e) => {
-            const modal = document.getElementById('settingsModal');
-            if (e.target === modal) {
-                closeSettings();
-            }
+            if (e.target === document.getElementById('settingsModal')) closeSettings();
         });
+
+        // Initialize on load
+        updateAnalytics();
+        renderActivities();
+        renderGoals();
+        renderLeaderboard();
+        updateWellness();
+        if (ikigaiData) document.getElementById('ikigaiDiagram').style.display = 'block';
     </script>
 </body>
 </html>
