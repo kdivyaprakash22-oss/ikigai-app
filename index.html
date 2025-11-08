@@ -17,15 +17,41 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --bg: #ffffff;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #e0e0e0;
+            --card-bg: #f8f9fa;
+        }
+
+        body.dark-mode {
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --bg: #1a1a1a;
+            --text: #ffffff;
+            --text-light: #bbbbbb;
+            --border: #333333;
+            --card-bg: #2d2d2d;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             min-height: 100vh;
             padding: 20px;
             padding-top: max(20px, env(safe-area-inset-top));
             padding-left: env(safe-area-inset-left);
             padding-right: env(safe-area-inset-right);
             padding-bottom: env(safe-area-inset-bottom);
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
         }
 
         .container {
@@ -33,10 +59,47 @@
             margin: 0 auto;
         }
 
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .theme-selector, .controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .theme-btn, .control-btn {
+            background: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        body.dark-mode .theme-btn,
+        body.dark-mode .control-btn {
+            background: #333333;
+            color: white;
+        }
+
+        .theme-btn:hover, .control-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
         header {
             text-align: center;
             color: white;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         header h1 {
@@ -56,7 +119,7 @@
             padding: 10px 12px;
             background: white;
             border: none;
-            color: #667eea;
+            color: var(--primary);
             font-weight: 600;
             cursor: pointer;
             border-radius: 8px;
@@ -65,8 +128,13 @@
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
 
+        body.dark-mode .nav-tab {
+            background: #333333;
+            color: #667eea;
+        }
+
         .nav-tab.active {
-            background: #667eea;
+            background: var(--primary);
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
@@ -82,21 +150,22 @@
         }
 
         .card {
-            background: white;
+            background: var(--bg);
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 8px 30px rgba(0,0,0,0.15);
             margin-bottom: 15px;
+            color: var(--text);
         }
 
         .card h2 {
-            color: #667eea;
+            color: var(--primary);
             margin-bottom: 12px;
             font-size: 1.3em;
         }
 
         .card h3 {
-            color: #555;
+            color: var(--text);
             margin: 15px 0 10px 0;
             font-size: 1em;
         }
@@ -114,7 +183,7 @@
         }
 
         .form-group label {
-            color: #333;
+            color: var(--text);
             font-weight: 600;
             margin-bottom: 6px;
             font-size: 0.9em;
@@ -124,10 +193,12 @@
         .form-group select,
         .form-group textarea {
             padding: 10px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid var(--border);
             border-radius: 6px;
             font-family: inherit;
             font-size: 0.9em;
+            background: var(--card-bg);
+            color: var(--text);
             transition: border-color 0.3s;
         }
 
@@ -135,7 +206,7 @@
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--primary);
             box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
         }
 
@@ -156,13 +227,23 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
         }
 
         .stats-grid {
@@ -173,7 +254,7 @@
         }
 
         .stat-box {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             padding: 15px;
             border-radius: 8px;
@@ -199,11 +280,12 @@
         }
 
         .item-card {
-            background: #f8f9fa;
-            border-left: 4px solid #667eea;
+            background: var(--card-bg);
+            border-left: 4px solid var(--primary);
             padding: 12px;
             border-radius: 6px;
             transition: all 0.3s;
+            color: var(--text);
         }
 
         .item-card:hover {
@@ -212,13 +294,13 @@
 
         .item-name {
             font-weight: 600;
-            color: #333;
+            color: var(--text);
             margin-bottom: 6px;
             font-size: 0.95em;
         }
 
         .item-meta {
-            color: #666;
+            color: var(--text-light);
             font-size: 0.8em;
         }
 
@@ -229,6 +311,77 @@
             padding: 12px;
             border-radius: 6px;
             margin: 12px 0;
+        }
+
+        body.dark-mode .success-message {
+            background: #1b5e20;
+            color: #81c784;
+            border-color: #51cf66;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .share-twitter { background: #1DA1F2; color: white; }
+        .share-facebook { background: #1877F2; color: white; }
+        .share-linkedin { background: #0A66C2; color: white; }
+        .share-whatsapp { background: #25D366; color: white; }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--bg);
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            color: var(--text);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            float: right;
+            color: var(--text);
         }
 
         @keyframes fadeIn {
@@ -251,10 +404,19 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>🌸 Ikigai Journey</h1>
-            <p style="color: white; margin-top: 5px;">Find Your Purpose & Live Well</p>
-        </header>
+        <div class="header-controls">
+            <header style="margin-bottom: 0; flex: 1;">
+                <h1>🌸 Ikigai Journey</h1>
+            </header>
+            <div class="controls">
+                <div class="theme-selector">
+                    <button class="theme-btn" title="Light Theme" onclick="setTheme('light')">☀️</button>
+                    <button class="theme-btn" title="Dark Theme" onclick="setTheme('dark')">🌙</button>
+                </div>
+                <button class="control-btn" title="Export Data" onclick="exportData()">💾</button>
+                <button class="control-btn" title="Settings" onclick="openSettings()">⚙️</button>
+            </div>
+        </div>
 
         <div class="nav-tabs">
             <button class="nav-tab active" onclick="switchTab('discover')">🎯 Discover</button>
@@ -268,7 +430,6 @@
         <div id="discover" class="section active">
             <div class="card">
                 <h2>🌸 Discover Your Ikigai</h2>
-                <p style="color: #666; margin-bottom: 12px; font-size: 0.9em;">Ikigai is the intersection of what you love, what you're good at, what the world needs, and what you can be paid for.</p>
 
                 <form id="ikigaiForm" onsubmit="submitIkigai(event)">
                     <div class="activity-form">
@@ -292,10 +453,22 @@
                     <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">✨ Generate Ikigai</button>
                 </form>
 
-                <div id="ikigaiDiagram" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 2px solid #e0e0e0;">
+                <div id="ikigaiDiagram" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 2px solid var(--border);">
                     <div class="success-message">
                         <strong>✅ Your Ikigai Saved!</strong>
                         <div id="resultText" style="margin-top: 8px; font-size: 0.9em;"></div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn-secondary" onclick="shareIkigai()">📢 Share Results</button>
+                        <button class="btn-secondary" onclick="downloadIkigai()">📥 Download as Text</button>
+                    </div>
+
+                    <div class="share-buttons" id="shareButtons" style="display: none;">
+                        <button class="share-btn share-twitter" onclick="shareOnTwitter()">𝕏 Twitter</button>
+                        <button class="share-btn share-facebook" onclick="shareOnFacebook()">f Facebook</button>
+                        <button class="share-btn share-linkedin" onclick="shareOnLinkedIn()">in LinkedIn</button>
+                        <button class="share-btn share-whatsapp" onclick="shareOnWhatsApp()">💬 WhatsApp</button>
                     </div>
                 </div>
             </div>
@@ -339,7 +512,6 @@
         <div id="nutrition" class="section">
             <div class="card">
                 <h2>🍽️ Hara Hachi Bu (80% Rule)</h2>
-                <p style="color: #666; margin-bottom: 12px; font-size: 0.9em;">Stop eating when 80% full for better health and longevity.</p>
 
                 <form onsubmit="logMeal(event)">
                     <div class="activity-form">
@@ -400,7 +572,7 @@
                     <div class="form-group">
                         <label for="stressLevel">Stress Level (1-10) *</label>
                         <input type="range" id="stressLevel" min="1" max="10" value="5">
-                        <div style="color: #667eea; font-weight: 600; margin-top: 4px;">Level: <span id="stressValue">5</span>/10</div>
+                        <div style="color: var(--primary); font-weight: 600; margin-top: 4px;">Level: <span id="stressValue">5</span>/10</div>
                     </div>
                     <button class="btn-primary" onclick="logStress()" style="grid-column: 1 / 1;">➕ Log</button>
                 </div>
@@ -431,8 +603,39 @@
                         <div class="stat-label">Meals</div>
                     </div>
                 </div>
-                <p style="color: #666; text-align: center; margin-top: 20px;">📊 More analytics coming soon...</p>
+                <div class="action-buttons">
+                    <button class="btn-secondary" onclick="exportData()">💾 Export All Data</button>
+                    <button class="btn-secondary" onclick="generateReport()">📄 Weekly Report</button>
+                    <button class="btn-secondary" onclick="clearAllData()">🗑️ Clear Data</button>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeSettings()">✕</button>
+            <h2 style="margin-bottom: 15px;">⚙️ Settings</h2>
+            
+            <h3 style="margin-top: 15px;">Theme</h3>
+            <div class="activity-form">
+                <button class="btn-secondary" onclick="setTheme('light'); closeSettings()">☀️ Light Mode</button>
+                <button class="btn-secondary" onclick="setTheme('dark'); closeSettings()">🌙 Dark Mode</button>
+            </div>
+
+            <h3 style="margin-top: 15px;">Data</h3>
+            <div class="activity-form">
+                <button class="btn-secondary" onclick="exportData(); closeSettings()">💾 Export Data</button>
+                <button class="btn-secondary" onclick="clearAllData(); closeSettings()">🗑️ Clear All</button>
+            </div>
+
+            <h3 style="margin-top: 15px;">About</h3>
+            <p style="color: var(--text-light); font-size: 0.9em;">
+                <strong>Ikigai Journey v2.0</strong><br>
+                Find your purpose and live well<br>
+                Based on Japanese longevity principles
+            </p>
         </div>
     </div>
 
@@ -441,6 +644,7 @@
         let meals = JSON.parse(localStorage.getItem('meals')) || [];
         let ikigaiData = JSON.parse(localStorage.getItem('ikigaiData')) || null;
         let wellnessData = JSON.parse(localStorage.getItem('wellnessData')) || [];
+        let theme = localStorage.getItem('theme') || 'light';
 
         // Service Worker
         if ('serviceWorker' in navigator) {
@@ -453,6 +657,7 @@
 
         // Initialize
         window.addEventListener('load', () => {
+            setTheme(theme);
             renderActivities();
             renderMeals();
             updateAnalytics();
@@ -473,6 +678,134 @@
             }
         });
 
+        // THEME MANAGEMENT
+        function setTheme(themeName) {
+            theme = themeName;
+            localStorage.setItem('theme', themeName);
+            if (themeName === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
+
+        // SETTINGS MODAL
+        function openSettings() {
+            document.getElementById('settingsModal').classList.add('active');
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('active');
+        }
+
+        // EXPORT DATA
+        function exportData() {
+            const data = {
+                ikigai: ikigaiData,
+                activities: activities,
+                meals: meals,
+                wellness: wellnessData,
+                exportDate: new Date().toLocaleString()
+            };
+
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ikigai-data-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            alert('✅ Data exported successfully!');
+        }
+
+        // GENERATE REPORT
+        function generateReport() {
+            const lastWeek = new Date(new Date().getTime() - 7*24*60*60*1000).toDateString();
+            const weekActivities = activities.filter(a => new Date(a.date) >= new Date(lastWeek));
+
+            let report = `IKIGAI JOURNEY - WEEKLY REPORT\n`;
+            report += `Generated: ${new Date().toLocaleString()}\n\n`;
+            report += `IKIGAI PROFILE:\n`;
+            if (ikigaiData) {
+                report += `❤️ Passion: ${ikigaiData.love}\n`;
+                report += `⭐ Talent: ${ikigaiData.good}\n`;
+                report += `🌍 Mission: ${ikigaiData.need}\n`;
+                report += `💼 Vocation: ${ikigaiData.paid}\n\n`;
+            }
+            report += `WEEKLY STATS:\n`;
+            report += `Activities: ${weekActivities.length}\n`;
+            report += `Total Minutes: ${weekActivities.reduce((sum, a) => sum + a.duration, 0)}\n`;
+            report += `Avg Flow State: ${(weekActivities.reduce((sum, a) => sum + a.flowState, 0) / (weekActivities.length || 1)).toFixed(1)}\n`;
+
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ikigai-report-${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            alert('✅ Report generated!');
+        }
+
+        // SHARE ON SOCIAL MEDIA
+        function shareIkigai() {
+            document.getElementById('shareButtons').style.display = 'flex';
+        }
+
+        function shareOnTwitter() {
+            const text = `I just discovered my Ikigai! 🌸\n❤️ Passion: ${ikigaiData.love}\n⭐ Talent: ${ikigaiData.good}\n🌍 Mission: ${ikigaiData.need}\n💼 Vocation: ${ikigaiData.paid}\n\nFind yours: ${window.location.href}`;
+            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
+        function shareOnFacebook() {
+            const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=I%20just%20discovered%20my%20Ikigai!`;
+            window.open(url, '_blank');
+        }
+
+        function shareOnLinkedIn() {
+            const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`;
+            window.open(url, '_blank');
+        }
+
+        function shareOnWhatsApp() {
+            const text = `I just discovered my Ikigai on Ikigai Journey! Find yours: ${window.location.href}`;
+            const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
+        function downloadIkigai() {
+            if (!ikigaiData) {
+                alert('Please discover your ikigai first!');
+                return;
+            }
+
+            const text = `MY IKIGAI\n\n❤️ What I Love:\n${ikigaiData.love}\n\n⭐ What I'm Good At:\n${ikigaiData.good}\n\n🌍 What the World Needs:\n${ikigaiData.need}\n\n💰 What I Can Be Paid For:\n${ikigaiData.paid}`;
+
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'my-ikigai.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+            alert('✅ Ikigai downloaded!');
+        }
+
+        // CLEAR DATA
+        function clearAllData() {
+            if (confirm('Are you sure? This will delete ALL your data!')) {
+                localStorage.clear();
+                activities = [];
+                meals = [];
+                ikigaiData = null;
+                wellnessData = [];
+                location.reload();
+            }
+        }
+
+        // SUBMIT IKIGAI
         function submitIkigai(event) {
             event.preventDefault();
             const love = document.getElementById('love').value;
@@ -495,6 +828,7 @@
             alert('✅ Ikigai saved!');
         }
 
+        // ADD ACTIVITY
         function addActivity() {
             const name = document.getElementById('activityName').value;
             const category = document.getElementById('ikigaiCategory').value;
@@ -530,7 +864,7 @@
             const todaysActivities = activities.filter(a => a.date === today);
 
             document.getElementById('activityList').innerHTML = todaysActivities.length === 0
-                ? '<p style="grid-column: 1/-1; text-align: center; color: #999;">No activities logged</p>'
+                ? '<p style="grid-column: 1/-1; text-align: center; color: var(--text-light);">No activities logged</p>'
                 : todaysActivities.map(a => `
                     <div class="item-card">
                         <div class="item-name">${a.name}</div>
@@ -539,6 +873,7 @@
                 `).join('');
         }
 
+        // LOG MEAL
         function logMeal(event) {
             event.preventDefault();
             const name = document.getElementById('mealName').value;
@@ -570,7 +905,7 @@
             const todaysMeals = meals.filter(m => m.date === today);
 
             document.getElementById('mealList').innerHTML = todaysMeals.length === 0
-                ? '<p style="grid-column: 1/-1; text-align: center; color: #999;">No meals logged</p>'
+                ? '<p style="grid-column: 1/-1; text-align: center; color: var(--text-light);">No meals logged</p>'
                 : todaysMeals.map(m => `
                     <div class="item-card">
                         <div class="item-name">🍽️ ${m.name}</div>
@@ -579,6 +914,7 @@
                 `).join('');
         }
 
+        // LOG SLEEP
         function logSleep() {
             const hours = parseFloat(document.getElementById('sleepHours').value);
             const quality = parseInt(document.getElementById('sleepQuality').value);
@@ -602,6 +938,7 @@
             alert('✅ Sleep logged!');
         }
 
+        // LOG STRESS
         function logStress() {
             const level = parseInt(document.getElementById('stressLevel').value);
 
@@ -641,7 +978,7 @@
             document.getElementById('wellnessScore').textContent = score;
 
             document.getElementById('wellnessList').innerHTML = todaysWellness.length === 0
-                ? '<p style="grid-column: 1/-1; text-align: center; color: #999;">No data logged</p>'
+                ? '<p style="grid-column: 1/-1; text-align: center; color: var(--text-light);">No data logged</p>'
                 : todaysWellness.map(w => `
                     <div class="item-card">
                         <div class="item-name">${w.type === 'sleep' ? '😴 Sleep' : '😌 Stress'}</div>
@@ -673,6 +1010,14 @@
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
         }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('settingsModal');
+            if (e.target === modal) {
+                closeSettings();
+            }
+        });
     </script>
 </body>
 </html>
