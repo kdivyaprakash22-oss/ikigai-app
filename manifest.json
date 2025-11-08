@@ -1,0 +1,19 @@
+{
+  "name": "Ikigai Journey - Find Your Purpose",
+  "short_name": "Ikigai",
+  "description": "Discover your ikigai and live with purpose. Track activities, wellness, and build community.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#667eea",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23667eea' width='192' height='192' rx='45'/><text x='96' y='96' font-size='120' text-anchor='middle' dy='.3em' fill='white'>🌸</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

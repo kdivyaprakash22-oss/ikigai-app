@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="Discover your ikigai and live with purpose.">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ikigai">
+    <link rel="manifest" href="manifest.json">
+    <title>Ikigai Journey - Find Your Purpose</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-top: max(20px, env(safe-area-inset-top));
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 2em;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .nav-tabs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .nav-tab {
+            padding: 10px 12px;
+            background: white;
+            border: none;
+            color: #667eea;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 0.85em;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-tab.active {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            margin-bottom: 15px;
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+        }
+
+        .card h3 {
+            color: #555;
+            margin: 15px 0 10px 0;
+            font-size: 1em;
+        }
+
+        .activity-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.9em;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.9em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 50px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            min-height: 44px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.75em;
+            opacity: 0.9;
+        }
+
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .item-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 12px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .item-card:hover {
+            box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+            font-size: 0.95em;
+        }
+
+        .item-meta {
+            color: #666;
+            font-size: 0.8em;
+        }
+
+        .success-message {
+            background: #e8f5e9;
+            border: 2px solid #51cf66;
+            color: #2d6a2d;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 12px 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 600px) {
+            .activity-form {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 1.5em;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌸 Ikigai Journey</h1>
+            <p style="color: white; margin-top: 5px;">Find Your Purpose & Live Well</p>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('discover')">🎯 Discover</button>
+            <button class="nav-tab" onclick="switchTab('today')">📅 Activity</button>
+            <button class="nav-tab" onclick="switchTab('nutrition')">🍽️ Nutrition</button>
+            <button class="nav-tab" onclick="switchTab('wellness')">💪 Wellness</button>
+            <button class="nav-tab" onclick="switchTab('analytics')">📊 Stats</button>
+        </div>
+
+        <!-- DISCOVER SECTION -->
+        <div id="discover" class="section active">
+            <div class="card">
+                <h2>🌸 Discover Your Ikigai</h2>
+                <p style="color: #666; margin-bottom: 12px; font-size: 0.9em;">Ikigai is the intersection of what you love, what you're good at, what the world needs, and what you can be paid for.</p>
+
+                <form id="ikigaiForm" onsubmit="submitIkigai(event)">
+                    <div class="activity-form">
+                        <div class="form-group">
+                            <label for="love">❤️ What do you LOVE?</label>
+                            <textarea id="love" placeholder="Your passions..." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="good">⭐ What are you GOOD AT?</label>
+                            <textarea id="good" placeholder="Your talents..." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="need">🌍 What does WORLD NEED?</label>
+                            <textarea id="need" placeholder="Your contribution..." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="paid">💰 What can you be PAID FOR?</label>
+                            <textarea id="paid" placeholder="Monetizable skills..." required></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">✨ Generate Ikigai</button>
+                </form>
+
+                <div id="ikigaiDiagram" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 2px solid #e0e0e0;">
+                    <div class="success-message">
+                        <strong>✅ Your Ikigai Saved!</strong>
+                        <div id="resultText" style="margin-top: 8px; font-size: 0.9em;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTIVITIES SECTION -->
+        <div id="today" class="section">
+            <div class="card">
+                <h2>📅 Log Activities</h2>
+                <div class="activity-form">
+                    <div class="form-group">
+                        <label for="activityName">Activity *</label>
+                        <input type="text" id="activityName" placeholder="e.g., Programming" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ikigaiCategory">Category *</label>
+                        <select id="ikigaiCategory" required>
+                            <option value="">Select...</option>
+                            <option value="love">❤️ Love</option>
+                            <option value="good">⭐ Good</option>
+                            <option value="need">🌍 Need</option>
+                            <option value="paid">💰 Paid</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="duration">Duration (min) *</label>
+                        <input type="number" id="duration" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="flowState">Flow (1-10) *</label>
+                        <input type="number" id="flowState" min="1" max="10" required>
+                    </div>
+                    <button class="btn-primary" onclick="addActivity()" style="grid-column: 1 / -1;">➕ Log Activity</button>
+                </div>
+                <h3>Today's Activities</h3>
+                <div id="activityList" class="item-grid"></div>
+            </div>
+        </div>
+
+        <!-- NUTRITION SECTION -->
+        <div id="nutrition" class="section">
+            <div class="card">
+                <h2>🍽️ Hara Hachi Bu (80% Rule)</h2>
+                <p style="color: #666; margin-bottom: 12px; font-size: 0.9em;">Stop eating when 80% full for better health and longevity.</p>
+
+                <form onsubmit="logMeal(event)">
+                    <div class="activity-form">
+                        <div class="form-group">
+                            <label for="mealName">Meal *</label>
+                            <input type="text" id="mealName" placeholder="Breakfast" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mealTime">Time *</label>
+                            <input type="time" id="mealTime" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mealFood">What you ate *</label>
+                            <textarea id="mealFood" placeholder="Describe..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary" style="grid-column: 1 / -1;">➕ Log Meal</button>
+                    </div>
+                </form>
+                <h3>Today's Meals</h3>
+                <div id="mealList" class="item-grid"></div>
+            </div>
+        </div>
+
+        <!-- WELLNESS SECTION -->
+        <div id="wellness" class="section">
+            <div class="card">
+                <h2>💪 Wellness Tracking</h2>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-number" id="avgSleep">0</div>
+                        <div class="stat-label">Avg Sleep</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="stressScore">0</div>
+                        <div class="stat-label">Stress</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="wellnessScore">0</div>
+                        <div class="stat-label">Wellness %</div>
+                    </div>
+                </div>
+
+                <h3>Log Sleep</h3>
+                <div class="activity-form">
+                    <div class="form-group">
+                        <label for="sleepHours">Sleep Hours *</label>
+                        <input type="number" id="sleepHours" min="0" max="12" step="0.5" placeholder="7.5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sleepQuality">Quality (1-10) *</label>
+                        <input type="number" id="sleepQuality" min="1" max="10" placeholder="8" required>
+                    </div>
+                    <button class="btn-primary" onclick="logSleep()" style="grid-column: 1 / -1;">➕ Log Sleep</button>
+                </div>
+
+                <h3 style="margin-top: 15px;">Log Stress</h3>
+                <div class="activity-form">
+                    <div class="form-group">
+                        <label for="stressLevel">Stress Level (1-10) *</label>
+                        <input type="range" id="stressLevel" min="1" max="10" value="5">
+                        <div style="color: #667eea; font-weight: 600; margin-top: 4px;">Level: <span id="stressValue">5</span>/10</div>
+                    </div>
+                    <button class="btn-primary" onclick="logStress()" style="grid-column: 1 / 1;">➕ Log</button>
+                </div>
+
+                <div id="wellnessList" class="item-grid" style="margin-top: 15px;"></div>
+            </div>
+        </div>
+
+        <!-- ANALYTICS SECTION -->
+        <div id="analytics" class="section">
+            <div class="card">
+                <h2>📊 Your Dashboard</h2>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-number" id="totalActivities">0</div>
+                        <div class="stat-label">Activities Today</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="totalMinutes">0</div>
+                        <div class="stat-label">Minutes</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="avgFlow">0</div>
+                        <div class="stat-label">Avg Flow</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="mealsLogged">0</div>
+                        <div class="stat-label">Meals</div>
+                    </div>
+                </div>
+                <p style="color: #666; text-align: center; margin-top: 20px;">📊 More analytics coming soon...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let activities = JSON.parse(localStorage.getItem('activities')) || [];
+        let meals = JSON.parse(localStorage.getItem('meals')) || [];
+        let ikigaiData = JSON.parse(localStorage.getItem('ikigaiData')) || null;
+        let wellnessData = JSON.parse(localStorage.getItem('wellnessData')) || [];
+
+        // Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(() => console.log('✅ Service Worker registered'))
+                    .catch(err => console.log('SW failed:', err));
+            });
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            renderActivities();
+            renderMeals();
+            updateAnalytics();
+            updateWellness();
+
+            document.getElementById('stressLevel').addEventListener('change', (e) => {
+                document.getElementById('stressValue').textContent = e.target.value;
+            });
+
+            if (ikigaiData) {
+                document.getElementById('ikigaiDiagram').style.display = 'block';
+                document.getElementById('resultText').innerHTML = `
+                    <strong>❤️ Passion:</strong> ${ikigaiData.love}<br>
+                    <strong>⭐ Talent:</strong> ${ikigaiData.good}<br>
+                    <strong>🌍 Mission:</strong> ${ikigaiData.need}<br>
+                    <strong>💼 Vocation:</strong> ${ikigaiData.paid}
+                `;
+            }
+        });
+
+        function submitIkigai(event) {
+            event.preventDefault();
+            const love = document.getElementById('love').value;
+            const good = document.getElementById('good').value;
+            const need = document.getElementById('need').value;
+            const paid = document.getElementById('paid').value;
+
+            ikigaiData = { love, good, need, paid, timestamp: new Date() };
+            localStorage.setItem('ikigaiData', JSON.stringify(ikigaiData));
+
+            document.getElementById('resultText').innerHTML = `
+                <strong>❤️ Passion:</strong> ${love}<br>
+                <strong>⭐ Talent:</strong> ${good}<br>
+                <strong>🌍 Mission:</strong> ${need}<br>
+                <strong>💼 Vocation:</strong> ${paid}
+            `;
+
+            document.getElementById('ikigaiDiagram').style.display = 'block';
+            document.getElementById('ikigaiForm').reset();
+            alert('✅ Ikigai saved!');
+        }
+
+        function addActivity() {
+            const name = document.getElementById('activityName').value;
+            const category = document.getElementById('ikigaiCategory').value;
+            const duration = document.getElementById('duration').value;
+            const flowState = document.getElementById('flowState').value;
+
+            if (!name || !category || !duration || !flowState) {
+                alert('Fill all fields!');
+                return;
+            }
+
+            activities.push({
+                id: Date.now(),
+                name, category,
+                duration: parseInt(duration),
+                flowState: parseInt(flowState),
+                time: new Date().toLocaleTimeString(),
+                date: new Date().toDateString()
+            });
+
+            localStorage.setItem('activities', JSON.stringify(activities));
+            renderActivities();
+            updateAnalytics();
+            document.getElementById('activityName').value = '';
+            document.getElementById('ikigaiCategory').value = '';
+            document.getElementById('duration').value = '';
+            document.getElementById('flowState').value = '';
+            alert('✅ Activity logged!');
+        }
+
+        function renderActivities() {
+            const today = new Date().toDateString();
+            const todaysActivities = activities.filter(a => a.date === today);
+
+            document.getElementById('activityList').innerHTML = todaysActivities.length === 0
+                ? '<p style="grid-column: 1/-1; text-align: center; color: #999;">No activities logged</p>'
+                : todaysActivities.map(a => `
+                    <div class="item-card">
+                        <div class="item-name">${a.name}</div>
+                        <div class="item-meta">⏱️ ${a.duration}min | 🎯 Flow: ${a.flowState}/10</div>
+                    </div>
+                `).join('');
+        }
+
+        function logMeal(event) {
+            event.preventDefault();
+            const name = document.getElementById('mealName').value;
+            const time = document.getElementById('mealTime').value;
+            const food = document.getElementById('mealFood').value;
+
+            if (!name || !time || !food) {
+                alert('Fill all fields!');
+                return;
+            }
+
+            meals.push({
+                id: Date.now(),
+                name, time, food,
+                date: new Date().toDateString()
+            });
+
+            localStorage.setItem('meals', JSON.stringify(meals));
+            renderMeals();
+            updateAnalytics();
+            document.getElementById('mealName').value = '';
+            document.getElementById('mealTime').value = '';
+            document.getElementById('mealFood').value = '';
+            alert('✅ Meal logged! Hara Hachi Bu! 🍽️');
+        }
+
+        function renderMeals() {
+            const today = new Date().toDateString();
+            const todaysMeals = meals.filter(m => m.date === today);
+
+            document.getElementById('mealList').innerHTML = todaysMeals.length === 0
+                ? '<p style="grid-column: 1/-1; text-align: center; color: #999;">No meals logged</p>'
+                : todaysMeals.map(m => `
+                    <div class="item-card">
+                        <div class="item-name">🍽️ ${m.name}</div>
+                        <div class="item-meta">${m.time} - ${m.food}</div>
+                    </div>
+                `).join('');
+        }
+
+        function logSleep() {
+            const hours = parseFloat(document.getElementById('sleepHours').value);
+            const quality = parseInt(document.getElementById('sleepQuality').value);
+
+            if (!hours || !quality) {
+                alert('Fill all fields!');
+                return;
+            }
+
+            wellnessData.push({
+                id: Date.now(),
+                type: 'sleep',
+                hours, quality,
+                date: new Date().toDateString()
+            });
+
+            localStorage.setItem('wellnessData', JSON.stringify(wellnessData));
+            updateWellness();
+            document.getElementById('sleepHours').value = '';
+            document.getElementById('sleepQuality').value = '';
+            alert('✅ Sleep logged!');
+        }
+
+        function logStress() {
+            const level = parseInt(document.getElementById('stressLevel').value);
+
+            wellnessData.push({
+                id: Date.now(),
+                type: 'stress',
+                level,
+                date: new Date().toDateString()
+            });
+
+            localStorage.setItem('wellnessData', JSON.stringify(wellnessData));
+            updateWellness();
+            alert('✅ Stress logged!');
+        }
+
+        function updateWellness() {
+            const today = new Date().toDateString();
+            const todaysWellness = wellnessData.filter(w => w.date === today);
+            const sleepData = todaysWellness.filter(w => w.type === 'sleep');
+            const stressData = todaysWellness.filter(w => w.type === 'stress');
+
+            const avgSleep = sleepData.length > 0
+                ? (sleepData.reduce((sum, w) => sum + w.hours, 0) / sleepData.length).toFixed(1)
+                : 0;
+
+            const avgStress = stressData.length > 0
+                ? Math.round(stressData.reduce((sum, w) => sum + w.level, 0) / stressData.length)
+                : 0;
+
+            let score = 50;
+            if (avgSleep >= 7 && avgSleep <= 9) score += 25;
+            if (avgStress <= 4) score += 15;
+            score = Math.min(100, score);
+
+            document.getElementById('avgSleep').textContent = avgSleep;
+            document.getElementById('stressScore').textContent = avgStress;
+            document.getElementById('wellnessScore').textContent = score;
+
+            document.getElementById('wellnessList').innerHTML = todaysWellness.length === 0
+                ? '<p style="grid-column: 1/-1; text-align: center; color: #999;">No data logged</p>'
+                : todaysWellness.map(w => `
+                    <div class="item-card">
+                        <div class="item-name">${w.type === 'sleep' ? '😴 Sleep' : '😌 Stress'}</div>
+                        <div class="item-meta">${w.type === 'sleep' ? `${w.hours}h | Quality: ${w.quality}/10` : `Level: ${w.level}/10`}</div>
+                    </div>
+                `).join('');
+        }
+
+        function updateAnalytics() {
+            const today = new Date().toDateString();
+            const todaysActivities = activities.filter(a => a.date === today);
+            const todaysMeals = meals.filter(m => m.date === today);
+
+            const totalMinutes = todaysActivities.reduce((sum, a) => sum + a.duration, 0);
+            const avgFlow = todaysActivities.length > 0
+                ? (todaysActivities.reduce((sum, a) => sum + a.flowState, 0) / todaysActivities.length).toFixed(1)
+                : 0;
+
+            document.getElementById('totalActivities').textContent = todaysActivities.length;
+            document.getElementById('totalMinutes').textContent = totalMinutes;
+            document.getElementById('avgFlow').textContent = avgFlow;
+            document.getElementById('mealsLogged').textContent = todaysMeals.length;
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
