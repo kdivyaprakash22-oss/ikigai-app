@@ -181,7 +181,7 @@
                 Notification.requestPermission().then((permission) => {
                     if (permission === 'granted') {
                         console.log('Notification permission granted.');
-                        return messaging.getToken({ vapidKey: 'YOUR_VAPID_KEY_FROM_FIREBASE_SETTINGS' });
+                        return messaging.getToken({ vapidKey: VAPID_KEY });
                     } else {
                         console.log('Unable to get permission to notify.');
                     }
@@ -213,4 +213,5 @@
     </script>
 </body>
 </html>
+
 
