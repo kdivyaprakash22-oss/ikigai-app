@@ -10,6 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Ikigai">
     <link rel="manifest" href="manifest.json">
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="razorpay-config.js"></script>
     <title>Ikigai Journey - Premium Available</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -464,17 +465,30 @@
                             </ul>
                         </div>
 
-                        <!-- PREMIUM -->
+                        <!-- MONTHLY -->
                         <div class="pricing-card featured">
-                            <h3>✨ Premium</h3>
+                            <h3>✨ Monthly</h3>
                             <div class="price">₹99<span class="price-period">/month</span></div>
                             <ul class="features-list">
                                 <li>Everything in Free</li>
                                 <li>🤖 AI Coaching</li>
-                                <li>📈 Analytics</li>
-                                <li>🔔 Notifications</li>
+                                <li>📈 Advanced Analytics</li>
+                                <li>🔔 Push Notifications</li>
                             </ul>
-                            <button class="btn-primary" id="subscribe-btn" onclick="startPayment()" style="margin-top: 15px;">🚀 Upgrade Now</button>
+                            <button class="btn-primary" id="subscribe-monthly" onclick="initiateRazorpayPayment('monthly')" style="margin-top: 15px; width: 100%;">🚀 Subscribe Monthly</button>
+                        </div>
+
+                        <!-- YEARLY -->
+                        <div class="pricing-card">
+                            <h3>🎁 Yearly</h3>
+                            <div class="price">₹799<span class="price-period">/year</span></div>
+                            <ul class="features-list">
+                                <li>Everything in Monthly</li>
+                                <li>💾 Lifetime Updates</li>
+                                <li>🎯 Priority Support</li>
+                                <li>📊 Annual Reports</li>
+                            </ul>
+                            <button class="btn-primary" onclick="initiateRazorpayPayment('yearly')" style="margin-top: 15px; width: 100%;">🚀 Subscribe Yearly</button>
                         </div>
                     </div>
 
@@ -486,10 +500,10 @@
         <!-- FOOTER -->
         <footer>
             <p>
-                <a href="https://razorpay.com/" target="_blank">Terms & Conditions</a> | 
-                <a href="https://razorpay.com/" target="_blank">Privacy Policy</a> | 
-                <a href="https://razorpay.com/" target="_blank">Refund Policy</a> | 
-                <a href="https://razorpay.com/" target="_blank">Contact Us</a>
+                <a href="policies.html" target="_blank">Terms & Conditions</a> | 
+                <a href="policies.html" target="_blank">Privacy Policy</a> | 
+                <a href="policies.html" target="_blank">Refund Policy</a> | 
+                <a href="policies.html" target="_blank">Contact Us</a>
             </p>
             <p>© 2025 Ikigai Journey. All rights reserved.</p>
         </footer>
@@ -503,11 +517,11 @@
 
     <!-- Your Firebase Config -->
     <script src="firebase-config.js"></script>
-    <!-- Your Razorpay Config -->
-    <script src="razorpay-config.js"></script>
+    <!-- Your Razorpay Config - ALREADY LOADED IN HEAD -->
 
     <script>
         let auth, db, messaging, userId = null;
+        const RAZORPAY_KEY_ID = "rzp_live_Re5FKIQm8RXuzJ";
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
@@ -723,8 +737,8 @@
                 if (doc.exists && doc.data().premium) {
                     document.getElementById('premium-badge').style.display = 'inline-block';
                     document.getElementById('subscription-status').textContent = '💎 Premium Member';
-                    document.getElementById('subscribe-btn').textContent = '✓ Already Premium';
-                    document.getElementById('subscribe-btn').disabled = true;
+                    document.getElementById('subscribe-monthly').textContent = '✓ Already Premium';
+                    document.getElementById('subscribe-monthly').disabled = true;
                 } else {
                     document.getElementById('subscription-status').textContent = '📌 Free Plan - Upgrade to Premium';
                 }
@@ -733,69 +747,80 @@
             }
         }
 
-        async function startPayment() {
+        function initiateRazorpayPayment(planId) {
             if (!userId) return alert('Please login first!');
 
-            try {
-                const options = {
-                    key: RAZORPAY_KEY_ID,
-                    amount: 9900, // ₹499 in paise
-                    currency: 'INR',
-                    name: 'Ikigai Journey',
-                    description: 'Premium Monthly Subscription',
-                    handler: async function(response) {
-                        // Payment successful
-                        console.log('Payment Success:', response);
+            const plan = premiumPlans.find(p => p.id === planId);
+            if (!plan) {
+                alert('Invalid plan selected');
+                return;
+            }
 
-                        // Save to Firebase
+            const options = {
+                key: RAZORPAY_KEY_ID,
+                amount: plan.price * 100,
+                currency: 'INR',
+                name: 'Ikigai Journey',
+                description: plan.name,
+                image: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect fill="%23667eea" width="192" height="192" rx="45"/><text x="96" y="96" font-size="120" text-anchor="middle" dy=".3em" fill="white">🌸</text></svg>',
+                handler: async function(response) {
+                    try {
                         await db.collection('users').doc(userId).set({
                             premium: true,
+                            premiumPlan: planId,
                             premiumSince: firebase.firestore.FieldValue.serverTimestamp(),
                             razorpayPaymentId: response.razorpay_payment_id,
                             razorpayOrderId: response.razorpay_order_id
                         }, { merge: true });
 
-                        alert('🎉 Welcome to Premium!\n\nYour payment was successful!\n\nYou now have access to all premium features!');
+                        alert('🎉 Welcome to Premium! Your payment was successful!');
                         checkPremium();
-                    },
-                    prefill: {
-                        email: document.getElementById('user-email').textContent,
-                        contact: '9999999999'
-                    },
-                    theme: {
-                        color: '#667eea'
+                    } catch (error) {
+                        alert('❌ Payment recorded but error saving: ' + error.message);
                     }
-                };
+                },
+                prefill: {
+                    email: document.getElementById('user-email').textContent,
+                    contact: '9999999999'
+                },
+                theme: {
+                    color: '#667eea'
+                }
+            };
 
-                const rzp1 = new Razorpay(options);
-                rzp1.open();
-
-            } catch (error) {
-                alert('❌ Error: ' + error.message);
-            }
+            const rzp = new Razorpay(options);
+            rzp.open();
         }
 
         // ========== NOTIFICATIONS ==========
         function setupNotifications() {
-            if ('serviceWorker' in navigator && typeof VAPID_KEY !== 'undefined') {
-                messaging = firebase.messaging();
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => {
+                        console.log('✅ Service Worker registered');
+                        
+                        // Initialize messaging if VAPID_KEY exists
+                        if (typeof firebaseConfig !== 'undefined') {
+                            messaging = firebase.messaging();
+                            
+                            messaging.getToken({ vapidKey: 'BMCFTEd5oD44SL_umS0L0sTGJpOZqk54snN29FkynnAK1hhhxKsrLKeR3f9Jmc5AXBHIyzorF3oWO_V4Q4YPuhw' })
+                                .then(token => {
+                                    console.log('✅ FCM Token obtained:', token.substring(0, 20) + '...');
+                                    if (userId) {
+                                        db.collection('users').doc(userId).set({ fcmToken: token }, { merge: true });
+                                    }
+                                })
+                                .catch(err => console.log('Token error:', err));
 
-                messaging.getToken({ vapidKey: VAPID_KEY })
-                    .then(token => {
-                        console.log('✅ FCM Token obtained:', token.substring(0, 20) + '...');
-                        if (userId) {
-                            db.collection('users').doc(userId).set({ fcmToken: token }, { merge: true });
+                            messaging.onMessage(payload => {
+                                console.log('📢 Foreground message:', payload);
+                                if (payload.notification) {
+                                    alert(payload.notification.title + ': ' + payload.notification.body);
+                                }
+                            });
                         }
                     })
-                    .catch(err => console.log('Token error:', err));
-
-                // Handle foreground messages
-                messaging.onMessage(payload => {
-                    console.log('📢 Foreground message:', payload);
-                    if (payload.notification) {
-                        alert(payload.notification.title + ': ' + payload.notification.body);
-                    }
-                });
+                    .catch(err => console.log('SW registration error:', err));
             }
         }
 
@@ -833,7 +858,7 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `ikigai-data-${new Date().toISOString().split('T')}.json`;
+                a.download = `ikigai-data-${new Date().toISOString().split('T')[0]}.json`;
                 a.click();
                 URL.revokeObjectURL(url);
 
@@ -873,14 +898,6 @@
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
         }
-
-        // Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('✅ Service Worker registered'))
-                .catch(err => console.log('SW error:', err));
-        }
     </script>
 </body>
 </html>
-
