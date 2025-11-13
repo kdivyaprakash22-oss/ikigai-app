@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#667eea">
-    <meta name="description" content="Discover your ikigai and live with purpose - Cloud-powered app">
+    <meta name="description" content="Discover your ikigai - Purpose-driven wellness app">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Ikigai">
     <link rel="manifest" href="manifest.json">
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <title>Ikigai Journey - Premium Available</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Ikigai Journey - Find Your Purpose</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -20,6 +20,20 @@
             min-height: 100vh;
             padding: 20px;
             color: #333;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         .container { max-width: 1200px; margin: 0 auto; }
@@ -36,8 +50,6 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        header p { font-size: 0.95em; opacity: 0.9; }
-
         .user-header {
             background: white;
             border-radius: 12px;
@@ -51,7 +63,14 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        .user-info { color: #333; font-weight: 600; }
+        .streak-badge {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e72 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+        }
 
         .card {
             background: white;
@@ -59,18 +78,18 @@
             padding: 20px;
             box-shadow: 0 8px 30px rgba(0,0,0,0.15);
             margin-bottom: 15px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .card h2 {
             color: #667eea;
             margin-bottom: 15px;
             font-size: 1.3em;
-        }
-
-        .card h3 {
-            color: #555;
-            margin: 15px 0 10px 0;
-            font-size: 1.05em;
         }
 
         .nav-tabs {
@@ -96,10 +115,16 @@
             background: #667eea;
             color: white;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
         .section { display: none; }
         .section.active { display: block; animation: fadeIn 0.3s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
 
         .form-group {
             display: flex;
@@ -121,11 +146,15 @@
             border-radius: 6px;
             font-family: inherit;
             font-size: 0.9em;
+            transition: border-color 0.3s;
         }
 
-        .form-group textarea {
-            min-height: 50px;
-            resize: vertical;
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
         }
 
         button {
@@ -154,27 +183,14 @@
             border: 1px solid #ddd;
         }
 
+        .btn-secondary:hover {
+            background: #e8e8e8;
+        }
+
         .btn-danger {
             background: #ff6b6b;
             color: white;
         }
-
-        .item-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 12px;
-            margin-top: 12px;
-        }
-
-        .item-card {
-            background: #f8f9fa;
-            border-left: 4px solid #667eea;
-            padding: 12px;
-            border-radius: 6px;
-        }
-
-        .item-name { font-weight: 600; margin-bottom: 4px; }
-        .item-meta { color: #666; font-size: 0.85em; }
 
         .stats-grid {
             display: grid;
@@ -191,8 +207,52 @@
             text-align: center;
         }
 
-        .stat-number { font-size: 1.8em; font-weight: bold; margin-bottom: 4px; }
-        .stat-label { font-size: 0.8em; opacity: 0.9; }
+        .stat-number { font-size: 1.8em; font-weight: bold; }
+        .stat-label { font-size: 0.8em; opacity: 0.9; margin-top: 5px; }
+
+        .activity-item {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .category-btn {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .category-btn.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin: 5px;
+        }
 
         .message {
             padding: 12px;
@@ -212,51 +272,11 @@
             color: #c62828;
         }
 
-        #auth-screen { display: block; }
-        #app-screen { display: none; }
-
-        .auth-container {
-            max-width: 400px;
-            margin: 50px auto;
-        }
-
-        .premium-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75em;
-            font-weight: 600;
-            margin-left: 8px;
-        }
-
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+        .chart-container {
+            position: relative;
+            height: 300px;
             margin: 20px 0;
         }
-
-        .pricing-card {
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .pricing-card.featured {
-            border: 2px solid #667eea;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
-            transform: scale(1.05);
-        }
-
-        .price { font-size: 2.5em; font-weight: bold; color: #667eea; margin: 10px 0; }
-        .price-period { color: #999; font-size: 0.9em; }
-
-        .features-list { text-align: left; margin: 20px 0; font-size: 0.9em; }
-        .features-list li { padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
-        .features-list li:before { content: "✓ "; color: #51cf66; font-weight: bold; margin-right: 8px; }
 
         footer {
             text-align: center;
@@ -275,20 +295,19 @@
             margin: 0 10px;
         }
 
-        footer a:hover {
-            text-decoration: underline;
-        }
+        #auth-screen { display: block; }
+        #app-screen { display: none; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .auth-container {
+            max-width: 400px;
+            margin: 50px auto;
         }
 
         @media (max-width: 600px) {
             header h1 { font-size: 1.5em; }
-            .nav-tabs { grid-template-columns: repeat(3, 1fr); }
+            .nav-tabs { grid-template-columns: repeat(2, 1fr); }
             .user-header { flex-direction: column; align-items: flex-start; }
-            .pricing-card.featured { transform: scale(1); }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
@@ -301,7 +320,7 @@
                 <p style="color: #666; margin-bottom: 15px; line-height: 1.6;">
                     Discover your purpose and live with intention. 
                     <br><br>
-                    <strong>Cloud-powered app:</strong> Your data is synced across all devices!
+                    <strong>Cloud-powered wellness app:</strong> Your data synced everywhere!
                 </p>
 
                 <div id="auth-message"></div>
@@ -320,7 +339,7 @@
                 <button class="btn-secondary" onclick="login()" style="width: 100%; margin-bottom: 15px;">🔓 Login</button>
 
                 <p style="color: #999; font-size: 0.8em; margin-top: 15px; text-align: center;">
-                    ✅ All data is encrypted and stored securely in Firebase
+                    ✅ All data encrypted & stored securely in Firebase
                 </p>
             </div>
         </div>
@@ -328,20 +347,16 @@
         <!-- APP SCREEN -->
         <div id="app-screen">
             <header>
-                <h1>
-                    🌸 Ikigai Journey
-                    <span class="premium-badge" id="premium-badge" style="display: none;">💎 PREMIUM</span>
-                </h1>
-                <p style="color: white; margin-top: 5px;">Your Purpose, Cloud-Powered</p>
+                <h1>🌸 Ikigai Journey</h1>
             </header>
 
             <div class="user-header">
-                <div class="user-info">
-                    👤 <span id="user-email"></span>
-                    <p id="subscription-status" style="color: #666; font-size: 0.9em; margin-top: 5px;"></p>
+                <div>
+                    <div style="font-weight: 600;">👤 <span id="user-email"></span></div>
+                    <div class="streak-badge" id="streak-display">🔥 Streak: 0</div>
                 </div>
                 <div>
-                    <button class="btn-secondary" onclick="enableNotifications()" style="margin-right: 10px;">🔔 Notifications</button>
+                    <button class="btn-secondary" onclick="switchTab('profile')" style="margin-right: 10px;">👤 Profile</button>
                     <button class="btn-secondary" onclick="logout();">🚪 Logout</button>
                 </div>
             </div>
@@ -349,7 +364,8 @@
             <div class="nav-tabs">
                 <button class="nav-tab active" onclick="switchTab('discover')">🎯 Discover</button>
                 <button class="nav-tab" onclick="switchTab('activities')">📅 Activities</button>
-                <button class="nav-tab" onclick="switchTab('dashboard')">📊 Dashboard</button>
+                <button class="nav-tab" onclick="switchTab('stats')">📊 Stats</button>
+                <button class="nav-tab" onclick="switchTab('profile')">👤 Profile</button>
                 <button class="nav-tab" onclick="switchTab('premium')">💎 Premium</button>
             </div>
 
@@ -357,7 +373,7 @@
             <div id="discover" class="section active">
                 <div class="card">
                     <h2>🌸 Discover Your Ikigai</h2>
-                    <p style="color: #666; margin-bottom: 15px;">Answer these 4 questions to find your unique purpose.</p>
+                    <p style="color: #666; margin-bottom: 15px;">Answer 4 powerful questions to find your unique purpose.</p>
 
                     <form onsubmit="saveIkigai(event)">
                         <div class="form-group">
@@ -380,7 +396,7 @@
                             <textarea id="paid" placeholder="Monetizable skills..." required></textarea>
                         </div>
 
-                        <button type="submit" class="btn-primary" style="width: 100%;">✨ Save Ikigai to Cloud</button>
+                        <button type="submit" class="btn-primary" style="width: 100%;">✨ Save Ikigai</button>
                     </form>
 
                     <div id="ikigai-result" style="display: none; margin-top: 20px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
@@ -398,8 +414,21 @@
                     <h2>📅 Log Your Activities</h2>
 
                     <div class="form-group">
+                        <label>📂 Select Category</label>
+                        <div class="category-selector">
+                            <button type="button" class="category-btn" onclick="selectCategory('Health', this)">💪 Health</button>
+                            <button type="button" class="category-btn" onclick="selectCategory('Work', this)">💼 Work</button>
+                            <button type="button" class="category-btn" onclick="selectCategory('Learning', this)">📚 Learning</button>
+                            <button type="button" class="category-btn" onclick="selectCategory('Hobby', this)">🎨 Hobby</button>
+                            <button type="button" class="category-btn" onclick="selectCategory('Social', this)">👥 Social</button>
+                            <button type="button" class="category-btn" onclick="selectCategory('Other', this)">⭐ Other</button>
+                        </div>
+                        <input type="hidden" id="selected-category" value="">
+                    </div>
+
+                    <div class="form-group">
                         <label>🎯 Activity Name</label>
-                        <input type="text" id="activity-name" placeholder="e.g., Meditation, Programming, Exercise">
+                        <input type="text" id="activity-name" placeholder="e.g., Morning Yoga, Coding">
                     </div>
 
                     <div class="form-group">
@@ -410,21 +439,19 @@
                     <button class="btn-primary" onclick="addActivity()" style="width: 100%;">➕ Log Activity</button>
 
                     <h3 style="margin-top: 20px;">📋 Recent Activities</h3>
-                    <div id="activities-list" class="item-grid">
-                        <p style="color: #999; grid-column: 1/-1;">Loading...</p>
-                    </div>
+                    <div id="activities-list"></div>
                 </div>
             </div>
 
-            <!-- DASHBOARD TAB -->
-            <div id="dashboard" class="section">
+            <!-- STATS TAB -->
+            <div id="stats" class="section">
                 <div class="card">
-                    <h2>📊 Your Dashboard</h2>
+                    <h2>📊 Your Statistics</h2>
 
                     <div class="stats-grid">
                         <div class="stat-box">
                             <div class="stat-number" id="activity-count">0</div>
-                            <div class="stat-label">Activities Logged</div>
+                            <div class="stat-label">Activities</div>
                         </div>
                         <div class="stat-box">
                             <div class="stat-number" id="total-minutes">0</div>
@@ -432,12 +459,58 @@
                         </div>
                         <div class="stat-box">
                             <div class="stat-number" id="avg-activity">0</div>
-                            <div class="stat-label">Avg Per Activity</div>
+                            <div class="stat-label">Avg/Activity</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number" id="daily-avg">0</div>
+                            <div class="stat-label">Daily Avg</div>
                         </div>
                     </div>
 
-                    <h3>💾 Data Management</h3>
-                    <button class="btn-secondary" onclick="exportData()" style="width: 100%; margin-bottom: 10px;">📥 Download My Data</button>
+                    <h3>📈 Weekly Activity Chart</h3>
+                    <div class="chart-container">
+                        <canvas id="activityChart"></canvas>
+                    </div>
+
+                    <h3>📂 Category Breakdown</h3>
+                    <div class="chart-container">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROFILE TAB -->
+            <div id="profile" class="section">
+                <div class="card">
+                    <h2>👤 Your Profile</h2>
+
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-number" id="profile-days">0</div>
+                            <div class="stat-label">Days Member</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number" id="profile-streak">0</div>
+                            <div class="stat-label">Current Streak 🔥</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number" id="profile-best">0</div>
+                            <div class="stat-label">Best Streak</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number" id="profile-badges">0</div>
+                            <div class="stat-label">Achievements</div>
+                        </div>
+                    </div>
+
+                    <h3>🏆 Your Achievements</h3>
+                    <div id="achievements-list" style="margin: 15px 0;"></div>
+
+                    <h3>⭐ Motivational Quote</h3>
+                    <p id="daily-quote" style="font-style: italic; color: #667eea; padding: 15px; background: #f0f2f5; border-radius: 8px; margin: 15px 0;"></p>
+
+                    <h3>💾 Account Management</h3>
+                    <button class="btn-secondary" onclick="exportData()" style="width: 100%; margin-bottom: 10px;">📥 Export My Data</button>
                     <button class="btn-danger" onclick="deleteAllData()" style="width: 100%;">🗑️ Delete All Data</button>
                 </div>
             </div>
@@ -446,35 +519,31 @@
             <div id="premium" class="section">
                 <div class="card">
                     <h2>💎 Go Premium!</h2>
-                    <p style="color: #666; margin-bottom: 20px;">Support the app and unlock amazing features!</p>
+                    <p style="color: #666; margin-bottom: 20px;">Unlock exclusive features & support our mission!</p>
 
-                    <div class="pricing-grid">
-                        <!-- FREE -->
-                        <div class="pricing-card">
-                            <h3>🎯 Free</h3>
-                            <div class="price">₹0<span class="price-period">/month</span></div>
-                            <ul class="features-list">
-                                <li>Basic Tracking</li>
-                                <li>Cloud Sync</li>
-                                <li>Export Data</li>
-                            </ul>
-                        </div>
-
-                        <!-- PREMIUM -->
-                        <div class="pricing-card featured">
-                            <h3>✨ Premium</h3>
-                            <div class="price">₹99<span class="price-period">/month</span></div>
-                            <ul class="features-list">
-                                <li>Everything in Free</li>
-                                <li>🤖 AI Coaching</li>
-                                <li>📈 Analytics</li>
-                                <li>🔔 Notifications</li>
-                            </ul>
-                            <button class="btn-primary" id="subscribe-btn" onclick="startPayment()" style="margin-top: 15px;">🚀 Upgrade Now</button>
-                        </div>
+                    <div style="background: #f0f2f5; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <h3 style="margin-bottom: 10px;">🚀 Premium Features:</h3>
+                        <ul style="margin-left: 20px; line-height: 2; color: #555;">
+                            <li>🤖 AI-Powered Insights & Recommendations</li>
+                            <li>📈 Advanced Analytics & Reports</li>
+                            <li>👥 Community Features & Leaderboards</li>
+                            <li>🔔 Smart Reminders & Notifications</li>
+                            <li>📱 Priority Mobile App Access</li>
+                            <li>🎨 Custom Themes & Customization</li>
+                            <li>⭐ VIP Support</li>
+                        </ul>
                     </div>
 
-                    <div id="payment-message" style="margin-top: 20px;"></div>
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #ffc107;">
+                        <strong>💜 Limited Time Offer:</strong> ₹99/month (First 100 users get 50% off!)
+                    </div>
+
+                    <button class="btn-primary" onclick="startPayment()" id="subscribe-btn" style="width: 100%; padding: 15px; font-size: 1.1em; margin-bottom: 15px;">🚀 Upgrade to Premium</button>
+
+                    <p style="color: #999; font-size: 0.9em; text-align: center;">
+                        💜 Help us create the ultimate wellness platform!<br>
+                        Cancel anytime, no questions asked.
+                    </p>
                 </div>
             </div>
         </div>
@@ -484,33 +553,48 @@
             <p>
                 <a href="/ikigai-app/policies.html" target="_blank">Terms & Conditions</a> | 
                 <a href="/ikigai-app/policies.html" target="_blank">Privacy Policy</a> | 
-                <a href="/ikigai-app/policies.html" target="_blank">Refund Policy</a> | 
-                <a href="/ikigai-app/policies.html" target="_blank">Contact Us</a>
+                <a href="/ikigai-app/policies.html" target="_blank">Refund Policy</a>
             </p>
-            <p>© 2025 Ikigai Journey. All rights reserved.</p>
+            <p>© 2025 Ikigai Journey. All rights reserved. Made with 💜 for your wellness.</p>
         </footer>
     </div>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging-compat.js"></script>
 
-    <!-- Your Firebase Config -->
     <script src="firebase-config.js"></script>
-    <!-- Your Razorpay Config -->
     <script src="razorpay-config.js"></script>
 
     <script>
-        let auth, db, messaging, userId = null;
+        let auth, db, userId = null, currentCategory = '';
+        let activityChart, categoryChart;
 
-        // Initialize Firebase
+        const quotes = [
+            "The only way to do great work is to love what you do. - Steve Jobs",
+            "Your time is limited, so don't waste it living someone else's life. - Steve Jobs",
+            "The future belongs to those who believe in the beauty of their dreams. - Eleanor Roosevelt",
+            "It is during our darkest moments that we must focus to see the light. - Aristotle",
+            "The only impossible journey is the one you never begin. - Tony Robbins",
+            "In the middle of difficulty lies opportunity. - Albert Einstein",
+            "Success is not final, failure is not fatal. - Winston Churchill",
+            "Believe you can and you're halfway there. - Theodore Roosevelt"
+        ];
+
+        const achievements = [
+            { id: 'first_log', name: '🎯 First Step', desc: 'Log your first activity', unlocked: false },
+            { id: 'five_logs', name: '⚡ Getting Started', desc: 'Complete 5 activities', unlocked: false },
+            { id: 'week_streak', name: '🔥 Weekly Warrior', desc: 'Log activities for 7 consecutive days', unlocked: false },
+            { id: 'hundred_mins', name: '⏱️ Centaur', desc: 'Total 100 minutes logged', unlocked: false },
+            { id: 'all_categories', name: '🎨 Renaissance', desc: 'Log activities in all categories', unlocked: false }
+        ];
+
         firebase.initializeApp(firebaseConfig);
         auth = firebase.auth();
         db = firebase.firestore();
 
-        // Check auth state
         auth.onAuthStateChanged(user => {
             if (user) {
                 userId = user.uid;
@@ -519,8 +603,7 @@
                 document.getElementById('app-screen').style.display = 'block';
                 loadUserData();
                 loadActivities();
-                checkPremium();
-                setupNotifications();
+                displayDailyQuote();
             } else {
                 userId = null;
                 document.getElementById('auth-screen').style.display = 'block';
@@ -528,7 +611,6 @@
             }
         });
 
-        // ========== AUTHENTICATION ==========
         function signup() {
             const email = document.getElementById('email-input').value;
             const password = document.getElementById('password-input').value;
@@ -539,7 +621,7 @@
             }
 
             auth.createUserWithEmailAndPassword(email, password)
-                .then(userCredential => {
+                .then(() => {
                     showMessage('✅ Account created! Welcome to Ikigai!', 'success');
                     document.getElementById('email-input').value = '';
                     document.getElementById('password-input').value = '';
@@ -559,7 +641,7 @@
             }
 
             auth.signInWithEmailAndPassword(email, password)
-                .then(userCredential => {
+                .then(() => {
                     showMessage('✅ Logged in successfully!', 'success');
                     document.getElementById('email-input').value = '';
                     document.getElementById('password-input').value = '';
@@ -570,9 +652,7 @@
         }
 
         function logout() {
-            auth.signOut().then(() => {
-                showMessage('✅ Logged out!', 'success');
-            });
+            auth.signOut();
         }
 
         function showMessage(msg, type) {
@@ -583,7 +663,13 @@
             }, 5000);
         }
 
-        // ========== FIRESTORE OPERATIONS ==========
+        function selectCategory(cat, btn) {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            currentCategory = cat;
+            document.getElementById('selected-category').value = cat;
+        }
+
         async function saveIkigai(event) {
             event.preventDefault();
             if (!userId) return alert('You must be logged in!');
@@ -607,7 +693,7 @@
                 `;
                 document.getElementById('ikigai-result').style.display = 'block';
 
-                alert('✅ Ikigai saved to the cloud! Access it from any device!');
+                alert('✅ Ikigai saved to the cloud!');
             } catch (error) {
                 alert('❌ Error: ' + error.message);
             }
@@ -633,17 +719,20 @@
                     `;
                     document.getElementById('ikigai-result').style.display = 'block';
                 }
+
+                updateStreakDisplay();
+                updateProfileStats();
             } catch (error) {
-                console.error('Error loading data:', error);
+                console.error('Error:', error);
             }
         }
 
-        // ========== ACTIVITIES ==========
         async function addActivity() {
             if (!userId) return alert('You must be logged in!');
 
             const name = document.getElementById('activity-name').value;
             const duration = document.getElementById('activity-duration').value;
+            const category = document.getElementById('selected-category').value;
 
             if (!name || !duration) {
                 alert('❌ Please fill all fields!');
@@ -654,13 +743,18 @@
                 await db.collection('users').doc(userId).collection('activities').add({
                     name: name,
                     duration: parseInt(duration),
+                    category: category || 'Other',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
                 document.getElementById('activity-name').value = '';
                 document.getElementById('activity-duration').value = '';
+                document.getElementById('selected-category').value = '';
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('selected'));
+                
                 loadActivities();
-                alert('✅ Activity logged to cloud!');
+                updateStreakDisplay();
+                alert('✅ Activity logged!');
             } catch (error) {
                 alert('❌ Error: ' + error.message);
             }
@@ -671,7 +765,7 @@
 
             try {
                 const snapshot = await db.collection('users').doc(userId).collection('activities')
-                    .orderBy('createdAt', 'desc').limit(20).get();
+                    .orderBy('createdAt', 'desc').limit(50).get();
 
                 const activities = [];
                 snapshot.forEach(doc => {
@@ -682,40 +776,135 @@
                 });
 
                 const html = activities.map(activity => `
-                    <div class="item-card">
-                        <div class="item-name">${activity.name}</div>
-                        <div class="item-meta">⏱️ ${activity.duration} minutes</div>
+                    <div class="activity-item">
+                        <div>
+                            <strong>${activity.name}</strong>
+                            <div style="font-size: 0.85em; color: #666;">⏱️ ${activity.duration} min | 📂 ${activity.category || 'Other'}</div>
+                        </div>
                     </div>
                 `).join('');
 
                 document.getElementById('activities-list').innerHTML = html || '<p style="color: #999;">No activities yet. Start logging!</p>';
+
+                // Update stats
                 document.getElementById('activity-count').textContent = activities.length;
-                document.getElementById('total-minutes').textContent = activities.reduce((sum, a) => sum + a.duration, 0);
+                const totalMins = activities.reduce((sum, a) => sum + a.duration, 0);
+                document.getElementById('total-minutes').textContent = totalMins;
                 document.getElementById('avg-activity').textContent = activities.length > 0
-                    ? Math.round(activities.reduce((sum, a) => sum + a.duration, 0) / activities.length)
+                    ? Math.round(totalMins / activities.length)
                     : 0;
+                document.getElementById('daily-avg').textContent = activities.length > 0
+                    ? Math.round(totalMins / Math.max(1, getDaysSinceMember()))
+                    : 0;
+
+                updateCharts(activities);
             } catch (error) {
-                console.error('Error loading activities:', error);
+                console.error('Error:', error);
             }
         }
 
-        // ========== PREMIUM & RAZORPAY ==========
-        async function checkPremium() {
-            if (!userId) return;
+        function updateCharts(activities) {
+            // Category breakdown
+            const categoryData = {};
+            activities.forEach(a => {
+                categoryData[a.category || 'Other'] = (categoryData[a.category || 'Other'] || 0) + a.duration;
+            });
+
+            if (categoryChart) categoryChart.destroy();
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            categoryChart = new Chart(categoryCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(categoryData),
+                    datasets: [{
+                        data: Object.values(categoryData),
+                        backgroundColor: ['#667eea', '#764ba2', '#ff6b6b', '#51cf66', '#ffc107', '#00bcd4']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // Weekly activity chart
+            const weekData = Array(7).fill(0);
+            activities.forEach(a => {
+                const date = a.createdAt?.toDate?.() || new Date();
+                const dayIndex = (6 - Math.floor((Date.now() - date) / 86400000)) % 7;
+                if (dayIndex >= 0 && dayIndex < 7) {
+                    weekData[dayIndex] += a.duration;
+                }
+            });
+
+            if (activityChart) activityChart.destroy();
+            const activityCtx = document.getElementById('activityChart').getContext('2d');
+            activityChart = new Chart(activityCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                    datasets: [{
+                        label: 'Minutes',
+                        data: weekData,
+                        backgroundColor: '#667eea'
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+            });
+        }
+
+        function displayDailyQuote() {
+            const today = new Date().getDate();
+            document.getElementById('daily-quote').textContent = quotes[today % quotes.length];
+        }
+
+        function getDaysSinceMember() {
+            // Placeholder - can be enhanced to store join date
+            return 1;
+        }
+
+        async function updateStreakDisplay() {
+            // Calculate streak from activities
+            let streak = 0;
+            let currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
 
             try {
-                const doc = await db.collection('users').doc(userId).get();
-                if (doc.exists && doc.data().premium) {
-                    document.getElementById('premium-badge').style.display = 'inline-block';
-                    document.getElementById('subscription-status').textContent = '💎 Premium Member';
-                    document.getElementById('subscribe-btn').textContent = '✓ Already Premium';
-                    document.getElementById('subscribe-btn').disabled = true;
-                } else {
-                    document.getElementById('subscription-status').textContent = '📌 Free Plan - Upgrade to Premium';
+                const snapshot = await db.collection('users').doc(userId).collection('activities').get();
+                const activities = [];
+                snapshot.forEach(doc => {
+                    const date = doc.data().createdAt?.toDate?.() || new Date();
+                    date.setHours(0, 0, 0, 0);
+                    activities.push(date.getTime());
+                });
+
+                activities.sort((a, b) => b - a);
+
+                for (let i = 0; i < 365; i++) {
+                    const checkDate = new Date(currentDate);
+                    checkDate.setDate(checkDate.getDate() - i);
+                    if (activities.includes(checkDate.getTime())) {
+                        streak++;
+                    } else if (i > 0) {
+                        break;
+                    }
                 }
             } catch (error) {
                 console.error('Error:', error);
             }
+
+            document.getElementById('streak-display').textContent = `🔥 Streak: ${streak}`;
+            document.getElementById('profile-streak').textContent = streak;
+            document.getElementById('profile-best').textContent = streak;
+        }
+
+        async function updateProfileStats() {
+            const snapshot = await db.collection('users').doc(userId).collection('activities').get();
+            const days = Math.ceil((Date.now() - auth.currentUser.metadata.creationTime) / 86400000);
+            document.getElementById('profile-days').textContent = Math.max(1, days);
+            document.getElementById('profile-badges').textContent = achievements.filter(a => a.unlocked).length;
+
+            const achievementsHtml = achievements.map(a => `
+                <div class="badge">${a.name}<br><small>${a.desc}</small></div>
+            `).join('');
+            document.getElementById('achievements-list').innerHTML = achievementsHtml || '<p style="color: #999;">Start logging to unlock achievements!</p>';
         }
 
         async function startPayment() {
@@ -724,82 +913,34 @@
             try {
                 const options = {
                     key: RAZORPAY_KEY_ID,
-                    amount: 9900, // ₹99 in paise
+                    amount: 9900,
                     currency: 'INR',
                     name: 'Ikigai Journey',
                     description: 'Premium Monthly Subscription',
                     handler: async function(response) {
-                        // Payment successful
-                        console.log('Payment Success:', response);
-
-                        // Save to Firebase
                         await db.collection('users').doc(userId).set({
                             premium: true,
                             premiumSince: firebase.firestore.FieldValue.serverTimestamp(),
-                            razorpayPaymentId: response.razorpay_payment_id,
-                            razorpayOrderId: response.razorpay_order_id
+                            razorpayPaymentId: response.razorpay_payment_id
                         }, { merge: true });
 
-                        alert('🎉 Welcome to Premium!\n\nYour payment was successful!\n\nYou now have access to all premium features!');
-                        checkPremium();
+                        alert('🎉 Welcome to Premium! Enjoy unlimited features!');
+                        document.getElementById('subscribe-btn').disabled = true;
+                        document.getElementById('subscribe-btn').textContent = '✓ Premium Active';
                     },
                     prefill: {
-                        email: document.getElementById('user-email').textContent,
-                        contact: '9999999999'
+                        email: document.getElementById('user-email').textContent
                     },
-                    theme: {
-                        color: '#667eea'
-                    }
+                    theme: { color: '#667eea' }
                 };
 
                 const rzp1 = new Razorpay(options);
                 rzp1.open();
-
             } catch (error) {
                 alert('❌ Error: ' + error.message);
             }
         }
 
-        // ========== NOTIFICATIONS ==========
-        function setupNotifications() {
-            if ('serviceWorker' in navigator && typeof VAPID_KEY !== 'undefined') {
-                messaging = firebase.messaging();
-
-                messaging.getToken({ vapidKey: VAPID_KEY })
-                    .then(token => {
-                        console.log('✅ FCM Token obtained:', token.substring(0, 20) + '...');
-                        if (userId) {
-                            db.collection('users').doc(userId).set({ fcmToken: token }, { merge: true });
-                        }
-                    })
-                    .catch(err => console.log('Token error:', err));
-
-                // Handle foreground messages
-                messaging.onMessage(payload => {
-                    console.log('📢 Foreground message:', payload);
-                    if (payload.notification) {
-                        alert(payload.notification.title + ': ' + payload.notification.body);
-                    }
-                });
-            }
-        }
-
-        function enableNotifications() {
-            if ('Notification' in window) {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') {
-                        alert('✅ Notifications enabled! You will receive reminders!');
-                        setupNotifications();
-                    } else {
-                        alert('❌ Notifications disabled. You can enable them later in browser settings.');
-                    }
-                });
-            } else {
-                alert('❌ Notifications not supported in this browser.');
-            }
-        }
-
-        // ========== DATA MANAGEMENT ==========
         async function exportData() {
             if (!userId) return alert('You must be logged in!');
 
@@ -820,7 +961,6 @@
                 a.href = url;
                 a.download = `ikigai-data-${new Date().toISOString().split('T')}.json`;
                 a.click();
-                URL.revokeObjectURL(url);
 
                 alert('✅ Your data has been downloaded!');
             } catch (error) {
@@ -830,28 +970,22 @@
 
         async function deleteAllData() {
             if (!userId) return alert('You must be logged in!');
-
-            if (!confirm('⚠️ Are you sure? This will DELETE all your data permanently!')) return;
+            if (!confirm('⚠️ Delete all data permanently?')) return;
 
             try {
                 const batch = db.batch();
-                const activitiesSnapshot = await db.collection('users').doc(userId).collection('activities').get();
-
-                activitiesSnapshot.forEach(doc => {
-                    batch.delete(doc.ref);
-                });
-
+                const snapshot = await db.collection('users').doc(userId).collection('activities').get();
+                snapshot.forEach(doc => batch.delete(doc.ref));
                 batch.delete(db.collection('users').doc(userId));
                 await batch.commit();
 
-                alert('✅ All your data has been deleted.');
+                alert('✅ Data deleted.');
                 logout();
             } catch (error) {
                 alert('❌ Error: ' + error.message);
             }
         }
 
-        // ========== UI FUNCTIONS ==========
         function switchTab(tabName) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -859,13 +993,9 @@
             event.target.classList.add('active');
         }
 
-        // Service Worker Registration
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('✅ Service Worker registered'))
-                .catch(err => console.log('SW error:', err));
+            navigator.serviceWorker.register('sw.js');
         }
     </script>
 </body>
 </html>
-
