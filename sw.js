@@ -2,7 +2,7 @@
 importScripts('https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging-compat.js');
 
-// Your Firebase Configuration - IMPORTANT: Paste YOUR keys here
+// Your Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBm1qr9EER9PV8U8L6RqdeEIR7njNK0uxM",
   authDomain: "ikigai-app-5987b.firebaseapp.com",
@@ -21,12 +21,11 @@ const messaging = firebase.messaging();
 // Handle background messages
 messaging.onBackgroundMessage((payload) => {
   console.log('[sw.js] Received background message:', payload);
-  
   const notificationTitle = payload.notification.title || '🌸 Ikigai Reminder';
   const notificationOptions = {
     body: payload.notification.body || 'Time to log your activities!',
-    icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23667eea" width="100" height="100" rx="20"/><text x="50" y="65" font-size="60" text-anchor="middle" fill="white">🌸</text></svg>',
-    badge: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23667eea" width="100" height="100" rx="20"/><text x="50" y="65" font-size="60" text-anchor="middle" fill="white">🌸</text></svg>',
+    icon: 'data:image/svg+xml,🌸',
+    badge: 'data:image/svg+xml,🌸',
     tag: 'ikigai-notification',
     requireInteraction: false,
     actions: [
@@ -36,7 +35,6 @@ messaging.onBackgroundMessage((payload) => {
       }
     ]
   };
-
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
@@ -62,7 +60,8 @@ const urlsToCache = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/firebase-config.js'
+  '/firebase-config.js',
+  '/razorpay-config.js'
 ];
 
 self.addEventListener('install', event => {
